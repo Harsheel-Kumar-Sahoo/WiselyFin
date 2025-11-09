@@ -1053,7 +1053,7 @@
                         </div>
                         
                         <div class="forgot-password">
-                            <a href="#">Forgot Password?</a>
+                            <a href="#" id="forgot-password-link">Forgot Password?</a>
                         </div>
                         
                         <button class="btn" id="login-btn" style="width: 100%;">Login</button>
@@ -1183,7 +1183,7 @@
                         <li>Supports both P2P and merchant payments</li>
                     </ul>
                     
-                    <button class="btn btn-success mark-complete" data-topic="upi">Mark as Completed (+5 FinCoins)</button>
+                    <button class="btn btn-success mark-complete" data-topic="upi" data-coins="5">Mark as Completed (+5 FinCoins)</button>
                 </div>
                 
                 <div class="content-section">
@@ -1208,7 +1208,23 @@
                         <li><strong>20%</strong> for savings and debt repayment</li>
                     </ul>
                     
-                    <button class="btn btn-success mark-complete" data-topic="budgeting">Mark as Completed (+5 FinCoins)</button>
+                    <button class="btn btn-success mark-complete" data-topic="budgeting" data-coins="5">Mark as Completed (+5 FinCoins)</button>
+                </div>
+
+                <div class="content-section">
+                    <h2>Digital Safety & Security</h2>
+                    <p>In today's digital age, protecting your financial information online is crucial. Learn how to safeguard your accounts and personal data from cyber threats.</p>
+                    
+                    <h3>Essential Security Practices</h3>
+                    <ul>
+                        <li>Use strong, unique passwords for each account</li>
+                        <li>Enable two-factor authentication</li>
+                        <li>Be cautious of phishing emails and messages</li>
+                        <li>Keep your software and apps updated</li>
+                        <li>Use secure networks for financial transactions</li>
+                    </ul>
+                    
+                    <button class="btn btn-success mark-complete" data-topic="security" data-coins="5">Mark as Completed (+5 FinCoins)</button>
                 </div>
             </div>
             
@@ -1221,7 +1237,7 @@
                         <div class="quiz-option">United Payment Institution</div>
                         <div class="quiz-option">Unified Personal Investment</div>
                     </div>
-                    <button class="btn submit-quiz" data-quiz="1">Submit Answer</button>
+                    <button class="btn submit-quiz" data-quiz="1" data-coins="10">Submit Answer</button>
                     <div class="quiz-result"></div>
                 </div>
                 
@@ -1233,7 +1249,7 @@
                         <div class="quiz-option" data-correct="true">Guarantees wealth accumulation</div>
                         <div class="quiz-option">Provides spending control</div>
                     </div>
-                    <button class="btn submit-quiz" data-quiz="2">Submit Answer</button>
+                    <button class="btn submit-quiz" data-quiz="2" data-coins="10">Submit Answer</button>
                     <div class="quiz-result"></div>
                 </div>
                 
@@ -1245,7 +1261,19 @@
                         <div class="quiz-option" data-correct="true">20%</div>
                         <div class="quiz-option">30%</div>
                     </div>
-                    <button class="btn submit-quiz" data-quiz="3">Submit Answer</button>
+                    <button class="btn submit-quiz" data-quiz="3" data-coins="10">Submit Answer</button>
+                    <div class="quiz-result"></div>
+                </div>
+
+                <div class="quiz-container" id="quiz-4">
+                    <div class="quiz-question">What is the most important practice for digital financial safety?</div>
+                    <div class="quiz-options">
+                        <div class="quiz-option">Using the same password for all accounts</div>
+                        <div class="quiz-option">Sharing passwords with family members</div>
+                        <div class="quiz-option" data-correct="true">Enabling two-factor authentication</div>
+                        <div class="quiz-option">Using public Wi-Fi for transactions</div>
+                    </div>
+                    <button class="btn submit-quiz" data-quiz="4" data-coins="10">Submit Answer</button>
                     <div class="quiz-result"></div>
                 </div>
             </div>
@@ -1471,49 +1499,31 @@
         </div>
     </div>
 
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
     <script>
-        // User Database
-        const users = [
-            { id: 1, name: "Harsheel", username: "harsheel@wiselyfin", password: "harsheel", role: "admin", coins: 1250, completedCourses: 3, completedQuizzes: 5 },
-            { id: 2, name: "Parth", username: "parth@wiselyfin", password: "parth", role: "admin", coins: 980, completedCourses: 2, completedQuizzes: 4 },
-            { id: 3, name: "Anik", username: "anik@wiselyfin", password: "anik", role: "admin", coins: 860, completedCourses: 2, completedQuizzes: 3 },
-            { id: 4, name: "User", username: "user@wiselyfin", password: "user", role: "user", coins: 450, completedCourses: 1, completedQuizzes: 2 }
-        ];
-
-        // Transaction History
-        const transactions = {
-            1: [
-                { date: "05 Nov 2023", time: "12:40 PM", task: "Completed Quiz 1", coins: 10 },
-                { date: "04 Nov 2023", time: "10:15 AM", task: "Watched Video: Budgeting", coins: 5 },
-                { date: "03 Nov 2023", time: "03:30 PM", task: "Daily Login Streak", coins: 2 },
-                { date: "02 Nov 2023", time: "02:20 PM", task: "Completed Quiz 2", coins: 15 },
-                { date: "01 Nov 2023", time: "11:10 AM", task: "Completed UPI Course", coins: 10 }
-            ],
-            2: [
-                { date: "04 Nov 2023", time: "09:25 AM", task: "Completed Quiz 1", coins: 10 },
-                { date: "03 Nov 2023", time: "02:15 PM", task: "Watched Video: UPI", coins: 5 },
-                { date: "02 Nov 2023", time: "04:40 PM", task: "Daily Login Streak", coins: 2 },
-                { date: "01 Nov 2023", time: "01:30 PM", task: "Completed Quiz 2", coins: 15 }
-            ],
-            3: [
-                { date: "03 Nov 2023", time: "11:20 AM", task: "Completed Quiz 1", coins: 10 },
-                { date: "02 Nov 2023", time: "03:15 PM", task: "Watched Video: Budgeting", coins: 5 },
-                { date: "01 Nov 2023", time: "10:45 AM", task: "Daily Login Streak", coins: 2 }
-            ],
-            4: [
-                { date: "02 Nov 2023", time: "02:30 PM", task: "Completed Quiz 1", coins: 10 },
-                { date: "01 Nov 2023", time: "11:15 AM", task: "Watched Video: UPI", coins: 5 }
-            ]
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAH6a-5noZFdYmrH73tmLmoQBowD_onxf4",
+            authDomain: "wiselyfin.firebaseapp.com",
+            projectId: "wiselyfin",
+            storageBucket: "wiselyfin.firebasestorage.app",
+            messagingSenderId: "335346931759",
+            appId: "1:335346931759:web:e0b19a12ae792659a48eda",
+            measurementId: "G-N5F3YH9024"
         };
 
-        // Completed items tracking
-        const completedItems = {
-            courses: [],
-            quizzes: []
-        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
 
-        // Current user
+        // Current user data
         let currentUser = null;
+        let userData = null;
 
         // DOM Elements
         const screens = document.querySelectorAll('.screen');
@@ -1538,6 +1548,50 @@
         const quizOptions = document.querySelectorAll('.quiz-option');
         const submitQuizBtns = document.querySelectorAll('.submit-quiz');
         const logoutBtn = document.getElementById('logout-btn');
+        const forgotPasswordLink = document.getElementById('forgot-password-link');
+
+        // Initialize default users in Firebase (run once)
+        async function initializeDefaultUsers() {
+            const defaultUsers = [
+                { email: "harsheel@wiselyfin", password: "harsheel", name: "Harsheel", role: "admin" },
+                { email: "parth@wiselyfin", password: "parth", name: "Parth", role: "admin" },
+                { email: "anik@wiselyfin", password: "anik", name: "Anik", role: "admin" },
+                { email: "user@wiselyfin", password: "user", name: "User", role: "user" }
+            ];
+
+            for (const user of defaultUsers) {
+                try {
+                    // Check if user already exists
+                    const userCredential = await auth.createUserWithEmailAndPassword(user.email, user.password);
+                    
+                    // Create user document in Firestore
+                    await db.collection('users').doc(userCredential.user.uid).set({
+                        name: user.name,
+                        email: user.email,
+                        role: user.role,
+                        fincoins: 0,
+                        coursesCompleted: [],
+                        quizzesCompleted: [],
+                        transactions: [],
+                        state: "",
+                        age: "",
+                        joinDate: new Date().toISOString(),
+                        streak: 0
+                    });
+                    
+                    console.log(`Created user: ${user.name}`);
+                    
+                    // Sign out the created user
+                    await auth.signOut();
+                } catch (error) {
+                    if (error.code === 'auth/email-already-in-use') {
+                        console.log(`User ${user.email} already exists`);
+                    } else {
+                        console.error('Error creating user:', error);
+                    }
+                }
+            }
+        }
 
         // Show specific screen
         function showScreen(screenId) {
@@ -1583,116 +1637,215 @@
 
         // Update dashboard with user data
         function updateDashboard() {
-            document.getElementById('user-greeting').textContent = `Hi ${currentUser.name} 👋`;
+            document.getElementById('user-greeting').textContent = `Hi ${userData.name} 👋`;
         }
 
         // Update wallet with user data
         function updateWallet() {
-            document.getElementById('user-balance').textContent = currentUser.coins;
+            document.getElementById('user-balance').textContent = userData.fincoins || 0;
             
             const transactionHistory = document.getElementById('transaction-history');
             transactionHistory.innerHTML = '';
             
-            if (transactions[currentUser.id]) {
-                transactions[currentUser.id].forEach(transaction => {
+            if (userData.transactions && userData.transactions.length > 0) {
+                userData.transactions.forEach(transaction => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td>${transaction.date}</td>
-                        <td>${transaction.time}</td>
+                        <td>${new Date(transaction.date).toLocaleDateString()}</td>
+                        <td>${new Date(transaction.date).toLocaleTimeString()}</td>
                         <td>${transaction.task}</td>
                         <td class="coin-earned">+${transaction.coins}</td>
                     `;
                     transactionHistory.appendChild(row);
                 });
+            } else {
+                transactionHistory.innerHTML = '<tr><td colspan="4" style="text-align: center;">No transactions yet</td></tr>';
             }
         }
 
         // Update profile with user data
         function updateProfile() {
-            document.getElementById('profile-avatar').textContent = currentUser.name.charAt(0);
-            document.getElementById('profile-name').textContent = currentUser.name;
-            document.getElementById('profile-role').textContent = currentUser.role === 'admin' ? 'Admin Member' : 'Member';
+            document.getElementById('profile-avatar').textContent = userData.name.charAt(0);
+            document.getElementById('profile-name').textContent = userData.name;
+            document.getElementById('profile-role').textContent = userData.role === 'admin' ? 'Admin Member' : 'Member';
             
-            document.getElementById('info-name').textContent = currentUser.name;
-            document.getElementById('info-email').textContent = currentUser.username;
-            document.getElementById('info-role').textContent = currentUser.role === 'admin' ? 'Administrator' : 'Standard User';
-            document.getElementById('info-join').textContent = 'November 2023';
+            document.getElementById('info-name').textContent = userData.name;
+            document.getElementById('info-email').textContent = userData.email;
+            document.getElementById('info-role').textContent = userData.role === 'admin' ? 'Administrator' : 'Standard User';
+            document.getElementById('info-join').textContent = new Date(userData.joinDate).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
             
-            document.getElementById('info-courses').textContent = currentUser.completedCourses;
-            document.getElementById('info-quizzes').textContent = currentUser.completedQuizzes;
-            document.getElementById('info-streak').textContent = '7 days';
-            document.getElementById('info-coins').textContent = `${currentUser.coins} 🪙`;
+            const coursesCompleted = userData.coursesCompleted ? userData.coursesCompleted.length : 0;
+            const quizzesCompleted = userData.quizzesCompleted ? userData.quizzesCompleted.length : 0;
+            
+            document.getElementById('info-courses').textContent = coursesCompleted;
+            document.getElementById('info-quizzes').textContent = quizzesCompleted;
+            document.getElementById('info-streak').textContent = `${userData.streak || 0} days`;
+            document.getElementById('info-coins').textContent = `${userData.fincoins || 0} 🪙`;
             
             // Update badges
             const badgesContainer = document.getElementById('badges-container');
             badgesContainer.innerHTML = '';
             
-            if (currentUser.coins >= 100) {
+            if (userData.fincoins >= 100) {
                 badgesContainer.innerHTML += '<div class="badge">🥇</div>';
             }
-            if (currentUser.completedCourses >= 2) {
+            if (coursesCompleted >= 2) {
                 badgesContainer.innerHTML += '<div class="badge">📚</div>';
             }
-            if (currentUser.completedQuizzes >= 3) {
+            if (quizzesCompleted >= 3) {
                 badgesContainer.innerHTML += '<div class="badge">🧠</div>';
             }
-            if (currentUser.role === 'admin') {
+            if (userData.role === 'admin') {
                 badgesContainer.innerHTML += '<div class="badge">⭐</div>';
             }
         }
 
         // Update leaderboard
-        function updateLeaderboard() {
+        async function updateLeaderboard() {
             const leaderboardContainer = document.getElementById('leaderboard-container');
-            leaderboardContainer.innerHTML = '';
+            leaderboardContainer.innerHTML = '<div style="text-align: center; padding: 20px;">Loading leaderboard...</div>';
             
-            // Sort users by coins
-            const sortedUsers = [...users].sort((a, b) => b.coins - a.coins);
-            
-            sortedUsers.forEach((user, index) => {
-                const rankClass = index === 0 ? 'rank-1' : index === 1 ? 'rank-2' : index === 2 ? 'rank-3' : '';
+            try {
+                // Get all users sorted by fincoins
+                const usersSnapshot = await db.collection('users')
+                    .orderBy('fincoins', 'desc')
+                    .limit(10)
+                    .get();
                 
-                const card = document.createElement('div');
-                card.className = 'leaderboard-card';
-                card.innerHTML = `
-                    <div class="rank ${rankClass}">${index + 1}</div>
-                    <div class="user-info">
-                        <div class="user-name">${user.name}</div>
-                    </div>
-                    <div class="user-coins">${user.coins} 🪙</div>
-                `;
-                leaderboardContainer.appendChild(card);
-            });
+                leaderboardContainer.innerHTML = '';
+                
+                if (usersSnapshot.empty) {
+                    leaderboardContainer.innerHTML = '<div style="text-align: center; padding: 20px;">No users found</div>';
+                    return;
+                }
+                
+                let rank = 1;
+                usersSnapshot.forEach(doc => {
+                    const user = doc.data();
+                    const rankClass = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : '';
+                    
+                    const card = document.createElement('div');
+                    card.className = 'leaderboard-card';
+                    card.innerHTML = `
+                        <div class="rank ${rankClass}">${rank}</div>
+                        <div class="user-info">
+                            <div class="user-name">${user.name}</div>
+                        </div>
+                        <div class="user-coins">${user.fincoins || 0} 🪙</div>
+                    `;
+                    leaderboardContainer.appendChild(card);
+                    rank++;
+                });
+            } catch (error) {
+                console.error('Error loading leaderboard:', error);
+                leaderboardContainer.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--error);">Error loading leaderboard</div>';
+            }
         }
 
         // Add coins to user
-        function addCoins(amount, task) {
-            currentUser.coins += amount;
-            
-            // Add to transaction history
-            if (!transactions[currentUser.id]) {
-                transactions[currentUser.id] = [];
+        async function addCoins(amount, task) {
+            try {
+                // Update local data
+                userData.fincoins = (userData.fincoins || 0) + amount;
+                
+                // Add transaction
+                if (!userData.transactions) {
+                    userData.transactions = [];
+                }
+                
+                const transaction = {
+                    date: new Date().toISOString(),
+                    task: task,
+                    coins: amount
+                };
+                
+                userData.transactions.unshift(transaction);
+                
+                // Update Firestore
+                await db.collection('users').doc(currentUser.uid).update({
+                    fincoins: userData.fincoins,
+                    transactions: userData.transactions
+                });
+                
+                // Update UI if on relevant screens
+                if (document.getElementById('wallet-screen').classList.contains('active')) {
+                    updateWallet();
+                }
+                
+                if (document.getElementById('profile-screen').classList.contains('active')) {
+                    updateProfile();
+                }
+                
+                return true;
+            } catch (error) {
+                console.error('Error adding coins:', error);
+                return false;
             }
-            
-            const now = new Date();
-            const date = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-            const time = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
-            
-            transactions[currentUser.id].unshift({
-                date: date,
-                time: time,
-                task: task,
-                coins: amount
-            });
-            
-            // Update UI if on wallet screen
-            if (document.getElementById('wallet-screen').classList.contains('active')) {
-                updateWallet();
+        }
+
+        // Mark course as completed
+        async function completeCourse(topic, coins) {
+            try {
+                if (!userData.coursesCompleted) {
+                    userData.coursesCompleted = [];
+                }
+                
+                // Check if already completed
+                if (userData.coursesCompleted.includes(topic)) {
+                    return false;
+                }
+                
+                // Add to completed courses
+                userData.coursesCompleted.push(topic);
+                
+                // Update Firestore
+                await db.collection('users').doc(currentUser.uid).update({
+                    coursesCompleted: userData.coursesCompleted
+                });
+                
+                // Add coins
+                await addCoins(coins, `Completed ${topic.toUpperCase()} Course`);
+                
+                // Update profile
+                updateProfile();
+                
+                return true;
+            } catch (error) {
+                console.error('Error completing course:', error);
+                return false;
             }
-            
-            // Update leaderboard if on leaderboard screen
-            if (document.getElementById('leaderboard-screen').classList.contains('active')) {
-                updateLeaderboard();
+        }
+
+        // Complete quiz
+        async function completeQuiz(quizId, coins) {
+            try {
+                if (!userData.quizzesCompleted) {
+                    userData.quizzesCompleted = [];
+                }
+                
+                // Check if already completed
+                if (userData.quizzesCompleted.includes(quizId)) {
+                    return false;
+                }
+                
+                // Add to completed quizzes
+                userData.quizzesCompleted.push(quizId);
+                
+                // Update Firestore
+                await db.collection('users').doc(currentUser.uid).update({
+                    quizzesCompleted: userData.quizzesCompleted
+                });
+                
+                // Add coins
+                await addCoins(coins, `Completed Quiz ${quizId}`);
+                
+                // Update profile
+                updateProfile();
+                
+                return true;
+            } catch (error) {
+                console.error('Error completing quiz:', error);
+                return false;
             }
         }
 
@@ -1737,20 +1890,18 @@
 
         // Mark course as complete
         markCompleteBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
+            btn.addEventListener('click', async function() {
                 const topic = this.getAttribute('data-topic');
+                const coins = parseInt(this.getAttribute('data-coins'));
                 
-                if (!completedItems.courses.includes(topic)) {
-                    completedItems.courses.push(topic);
-                    currentUser.completedCourses++;
-                    addCoins(5, `Completed ${topic.toUpperCase()} Course`);
-                    
+                const success = await completeCourse(topic, coins);
+                
+                if (success) {
                     this.textContent = 'Completed ✓';
                     this.disabled = true;
                     this.classList.remove('btn-success');
-                    
-                    // Update profile
-                    updateProfile();
+                } else {
+                    alert('Error completing course. Please try again.');
                 }
             });
         });
@@ -1771,8 +1922,9 @@
 
         // Submit quiz answer
         submitQuizBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
+            btn.addEventListener('click', async function() {
                 const quizId = this.getAttribute('data-quiz');
+                const coins = parseInt(this.getAttribute('data-coins'));
                 const quizContainer = document.getElementById(`quiz-${quizId}`);
                 const selectedOption = quizContainer.querySelector('.quiz-option.selected');
                 const resultDiv = quizContainer.querySelector('.quiz-result');
@@ -1788,17 +1940,12 @@
                     resultDiv.textContent = 'Correct! Well done.';
                     resultDiv.className = 'quiz-result correct';
                     
-                    if (!completedItems.quizzes.includes(parseInt(quizId))) {
-                        completedItems.quizzes.push(parseInt(quizId));
-                        currentUser.completedQuizzes++;
-                        addCoins(10, `Completed Quiz ${quizId}`);
-                        
-                        // Update profile
-                        updateProfile();
-                    }
+                    const success = await completeQuiz(parseInt(quizId), coins);
                     
-                    this.disabled = true;
-                    this.textContent = 'Completed ✓';
+                    if (success) {
+                        this.disabled = true;
+                        this.textContent = 'Completed ✓';
+                    }
                 } else {
                     resultDiv.textContent = 'Incorrect. Try again!';
                     resultDiv.className = 'quiz-result incorrect';
@@ -1813,25 +1960,47 @@
             showScreen('auth-screen');
         });
 
-        loginBtn.addEventListener('click', () => {
+        // Login with Firebase
+        loginBtn.addEventListener('click', async () => {
             const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
             
-            // Find user
-            const user = users.find(u => u.username === email && u.password === password);
+            if (!email || !password) {
+                loginError.textContent = 'Please enter both email and password.';
+                loginError.style.display = 'block';
+                return;
+            }
             
-            if (user) {
-                currentUser = user;
-                showScreen('dashboard-screen');
-                updateDashboard();
-                loginError.style.display = 'none';
-            } else {
-                loginError.textContent = 'Invalid email or password. Please try again.';
+            try {
+                const userCredential = await auth.signInWithEmailAndPassword(email, password);
+                currentUser = userCredential.user;
+                
+                // Get user data from Firestore
+                const userDoc = await db.collection('users').doc(currentUser.uid).get();
+                
+                if (userDoc.exists) {
+                    userData = userDoc.data();
+                    showScreen('dashboard-screen');
+                    loginError.style.display = 'none';
+                } else {
+                    loginError.textContent = 'User data not found. Please contact support.';
+                    loginError.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                if (error.code === 'auth/user-not-found') {
+                    loginError.textContent = 'No account found with this email.';
+                } else if (error.code === 'auth/wrong-password') {
+                    loginError.textContent = 'Incorrect password. Please try again.';
+                } else {
+                    loginError.textContent = 'Login failed. Please try again.';
+                }
                 loginError.style.display = 'block';
             }
         });
 
-        signupBtn.addEventListener('click', () => {
+        // Sign up with Firebase
+        signupBtn.addEventListener('click', async () => {
             const name = document.getElementById('signup-name').value;
             const email = document.getElementById('signup-email').value;
             const password = document.getElementById('signup-password').value;
@@ -1852,34 +2021,76 @@
                 return;
             }
             
-            if (users.find(u => u.username === email)) {
-                signupError.textContent = 'User with this email already exists.';
+            if (password.length < 6) {
+                signupError.textContent = 'Password should be at least 6 characters.';
                 signupError.style.display = 'block';
                 signupSuccess.style.display = 'none';
                 return;
             }
             
-            // Create new user (in a real app, this would be sent to a server)
-            const newUser = {
-                id: users.length + 1,
-                name: name,
-                username: email,
-                password: password,
-                role: 'user',
-                coins: 0,
-                completedCourses: 0,
-                completedQuizzes: 0
-            };
+            try {
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                currentUser = userCredential.user;
+                
+                // Create user document in Firestore
+                await db.collection('users').doc(currentUser.uid).set({
+                    name: name,
+                    email: email,
+                    role: 'user',
+                    fincoins: 0,
+                    coursesCompleted: [],
+                    quizzesCompleted: [],
+                    transactions: [],
+                    state: "",
+                    age: "",
+                    joinDate: new Date().toISOString(),
+                    streak: 0
+                });
+                
+                // Get the created user data
+                const userDoc = await db.collection('users').doc(currentUser.uid).get();
+                userData = userDoc.data();
+                
+                signupError.style.display = 'none';
+                signupSuccess.textContent = 'Account created successfully!';
+                signupSuccess.style.display = 'block';
+                
+                // Switch to dashboard after a delay
+                setTimeout(() => {
+                    showScreen('dashboard-screen');
+                }, 1500);
+                
+            } catch (error) {
+                console.error('Signup error:', error);
+                if (error.code === 'auth/email-already-in-use') {
+                    signupError.textContent = 'An account with this email already exists.';
+                } else if (error.code === 'auth/weak-password') {
+                    signupError.textContent = 'Password is too weak.';
+                } else {
+                    signupError.textContent = 'Error creating account. Please try again.';
+                }
+                signupError.style.display = 'block';
+                signupSuccess.style.display = 'none';
+            }
+        });
+
+        // Forgot password
+        forgotPasswordLink.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
             
-            users.push(newUser);
-            transactions[newUser.id] = [];
+            if (!email) {
+                alert('Please enter your email address to reset password.');
+                return;
+            }
             
-            signupError.style.display = 'none';
-            signupSuccess.textContent = 'Account created successfully! You can now login.';
-            signupSuccess.style.display = 'block';
-            
-            // Switch to login tab
-            authTabs[0].click();
+            try {
+                await auth.sendPasswordResetEmail(email);
+                alert('Password reset email sent! Check your inbox.');
+            } catch (error) {
+                console.error('Password reset error:', error);
+                alert('Error sending reset email. Please check your email address.');
+            }
         });
 
         // Tab card clicks
@@ -1906,9 +2117,59 @@
         });
 
         // Logout
-        logoutBtn.addEventListener('click', () => {
-            currentUser = null;
-            showScreen('start-screen');
+        logoutBtn.addEventListener('click', async () => {
+            try {
+                await auth.signOut();
+                currentUser = null;
+                userData = null;
+                showScreen('start-screen');
+                
+                // Clear form fields
+                document.getElementById('login-email').value = '';
+                document.getElementById('login-password').value = '';
+                document.getElementById('signup-name').value = '';
+                document.getElementById('signup-email').value = '';
+                document.getElementById('signup-password').value = '';
+                document.getElementById('signup-confirm').value = '';
+            } catch (error) {
+                console.error('Logout error:', error);
+            }
+        });
+
+        // Auth state observer
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                // User is signed in
+                currentUser = user;
+                
+                try {
+                    // Get user data from Firestore
+                    const userDoc = await db.collection('users').doc(user.uid).get();
+                    
+                    if (userDoc.exists) {
+                        userData = userDoc.data();
+                        
+                        // If on auth screen, redirect to dashboard
+                        if (authScreen.classList.contains('active')) {
+                            showScreen('dashboard-screen');
+                        }
+                    } else {
+                        console.error('User document not found');
+                        await auth.signOut();
+                    }
+                } catch (error) {
+                    console.error('Error getting user data:', error);
+                }
+            } else {
+                // User is signed out
+                currentUser = null;
+                userData = null;
+                
+                // If not on start or auth screen, redirect to start
+                if (!startScreen.classList.contains('active') && !authScreen.classList.contains('active')) {
+                    showScreen('start-screen');
+                }
+            }
         });
 
         // Add animation delays to tab cards
@@ -1916,17 +2177,8 @@
             card.style.animationDelay = `${index * 0.1}s`;
         });
 
-        // Add animation delays to leaderboard cards
-        const leaderboardCards = document.querySelectorAll('.leaderboard-card');
-        leaderboardCards.forEach((card, index) => {
-            card.style.animationDelay = `${index * 0.1}s`;
-        });
-
-        // Initialize with demo user logged in for testing
-        window.addEventListener('load', () => {
-            // Uncomment the line below to auto-login with demo user for testing
-            // currentUser = users[3]; showScreen('dashboard-screen'); updateDashboard();
-        });
+        // Initialize default users on first load (comment this out after first run)
+       // initializeDefaultUsers();
     </script>
 </body>
 </html>
