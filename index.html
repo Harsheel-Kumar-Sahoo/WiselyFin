@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WiselyFin - Learn. Play. Grow Financially.</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
             --black: #0a0908ff;
@@ -19,6 +20,8 @@
             --text-light: #FFFFFF;
             --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
             --transition: all 0.3s ease;
+            --success: #28a745;
+            --error: #dc3545;
         }
 
         * {
@@ -128,6 +131,14 @@
             transform: translateY(1px);
         }
 
+        .btn-secondary {
+            background: linear-gradient(to right, var(--walnut-brown), var(--gunmetal));
+        }
+
+        .btn-success {
+            background: linear-gradient(to right, var(--success), #1e7e34);
+        }
+
         .illustration {
             margin-top: 40px;
             max-width: 300px;
@@ -235,6 +246,26 @@
             font-size: 0.9rem;
         }
 
+        .message {
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            text-align: center;
+            display: none;
+        }
+
+        .message.error {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: var(--error);
+            border: 1px solid rgba(220, 53, 69, 0.3);
+        }
+
+        .message.success {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(40, 167, 69, 0.3);
+        }
+
         /* Dashboard */
         .dashboard-screen {
             background: var(--background);
@@ -289,7 +320,7 @@
             justify-content: center;
             margin-right: 15px;
             color: white;
-            font-size: 1.5rem;
+            font-size: 1.2rem;
         }
 
         .tab-content {
@@ -324,6 +355,14 @@
             justify-content: space-around;
             padding: 10px 0;
             z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .bottom-navbar.visible {
+            opacity: 1;
+            visibility: visible;
         }
 
         .nav-item {
@@ -334,6 +373,7 @@
             border-radius: 10px;
             transition: var(--transition);
             cursor: pointer;
+            color: #666;
         }
 
         .nav-item.active {
@@ -341,7 +381,7 @@
         }
 
         .nav-icon {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             margin-bottom: 3px;
         }
 
@@ -435,6 +475,11 @@
             background: linear-gradient(135deg, var(--primary-blue), #0056cc);
             position: relative;
             overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
         }
 
         .topic-title {
@@ -499,6 +544,92 @@
             align-items: center;
             color: var(--gold);
             font-weight: 600;
+        }
+
+        /* Content Section */
+        .content-section {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--card-shadow);
+            animation: fadeIn 0.5s ease;
+        }
+
+        .content-section h2 {
+            margin-bottom: 15px;
+            color: var(--primary-blue);
+        }
+
+        .content-section p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .content-section ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .content-section li {
+            margin-bottom: 8px;
+        }
+
+        /* Quiz Section */
+        .quiz-container {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--card-shadow);
+            animation: fadeIn 0.5s ease;
+        }
+
+        .quiz-question {
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .quiz-options {
+            margin-bottom: 20px;
+        }
+
+        .quiz-option {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .quiz-option:hover {
+            background: #f5f5f5;
+        }
+
+        .quiz-option.selected {
+            background: rgba(0, 120, 255, 0.1);
+            border-color: var(--primary-blue);
+        }
+
+        .quiz-result {
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .quiz-result.correct {
+            background: rgba(40, 167, 69, 0.1);
+            border: 1px solid rgba(40, 167, 69, 0.3);
+            color: var(--success);
+        }
+
+        .quiz-result.incorrect {
+            background: rgba(220, 53, 69, 0.1);
+            border: 1px solid rgba(220, 53, 69, 0.3);
+            color: var(--error);
         }
 
         /* Wallet Section */
@@ -846,7 +977,7 @@
             }
             
             .nav-icon {
-                font-size: 1.8rem;
+                font-size: 1.4rem;
             }
         }
 
@@ -910,6 +1041,7 @@
                     </div>
                     
                     <div class="auth-form active" id="login-form">
+                        <div class="message error" id="login-error"></div>
                         <div class="form-group">
                             <label for="login-email">Email</label>
                             <input type="email" id="login-email" placeholder="Enter your email">
@@ -928,6 +1060,8 @@
                     </div>
                     
                     <div class="auth-form" id="signup-form">
+                        <div class="message error" id="signup-error"></div>
+                        <div class="message success" id="signup-success"></div>
                         <div class="form-group">
                             <label for="signup-name">Full Name</label>
                             <input type="text" id="signup-name" placeholder="Enter your full name">
@@ -957,13 +1091,13 @@
         <!-- Dashboard Screen -->
         <div class="screen dashboard-screen" id="dashboard-screen">
             <div class="greeting">
-                <h1>Hi Harsheel 👋</h1>
+                <h1 id="user-greeting">Hi User 👋</h1>
                 <p>Ready to boost your financial knowledge today?</p>
             </div>
             
             <div class="dashboard-tabs">
                 <div class="tab-card" data-section="play-learn">
-                    <div class="tab-icon">🎮</div>
+                    <div class="tab-icon"><i class="fas fa-gamepad"></i></div>
                     <div class="tab-content">
                         <h3>Play & Learn</h3>
                         <p>Interactive lessons and quizzes</p>
@@ -972,7 +1106,7 @@
                 </div>
                 
                 <div class="tab-card" data-section="wallet">
-                    <div class="tab-icon">💰</div>
+                    <div class="tab-icon"><i class="fas fa-wallet"></i></div>
                     <div class="tab-content">
                         <h3>Wallet</h3>
                         <p>Track your FinCoin earnings</p>
@@ -981,7 +1115,7 @@
                 </div>
                 
                 <div class="tab-card" data-section="news">
-                    <div class="tab-icon">📰</div>
+                    <div class="tab-icon"><i class="fas fa-newspaper"></i></div>
                     <div class="tab-content">
                         <h3>News</h3>
                         <p>Latest financial updates</p>
@@ -990,7 +1124,7 @@
                 </div>
                 
                 <div class="tab-card" data-section="leaderboard">
-                    <div class="tab-icon">🏆</div>
+                    <div class="tab-icon"><i class="fas fa-trophy"></i></div>
                     <div class="tab-content">
                         <h3>Leaderboard</h3>
                         <p>See how you rank</p>
@@ -999,7 +1133,7 @@
                 </div>
                 
                 <div class="tab-card" data-section="profile">
-                    <div class="tab-icon">👤</div>
+                    <div class="tab-icon"><i class="fas fa-user"></i></div>
                     <div class="tab-content">
                         <h3>Profile</h3>
                         <p>Your achievements and info</p>
@@ -1008,7 +1142,7 @@
                 </div>
                 
                 <div class="tab-card" data-section="about">
-                    <div class="tab-icon">ℹ️</div>
+                    <div class="tab-icon"><i class="fas fa-info-circle"></i></div>
                     <div class="tab-content">
                         <h3>About Us</h3>
                         <p>Learn more about WiselyFin</p>
@@ -1023,7 +1157,7 @@
         <!-- Play & Learn Section -->
         <div class="screen section-screen" id="play-learn-screen">
             <div class="section-header">
-                <div class="back-btn">←</div>
+                <div class="back-btn"><i class="fas fa-arrow-left"></i></div>
                 <h2 class="section-title">Play & Learn</h2>
             </div>
             
@@ -1033,65 +1167,86 @@
             </div>
             
             <div class="subsection active" id="learn-subsection">
-                <div class="topic-grid">
-                    <div class="topic-card">
-                        <div class="topic-thumbnail"></div>
-                        <div class="topic-title">What is UPI?</div>
-                        <div class="topic-progress">
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 30%"></div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="content-section">
+                    <h2>Understanding UPI</h2>
+                    <p>Unified Payments Interface (UPI) is an instant real-time payment system developed by National Payments Corporation of India (NPCI). The interface facilitates inter-bank peer-to-peer (P2P) and person-to-merchant (P2M) transactions.</p>
                     
-                    <div class="topic-card">
-                        <div class="topic-thumbnail"></div>
-                        <div class="topic-title">Budgeting Basics</div>
-                        <div class="topic-progress">
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 70%"></div>
-                            </div>
-                        </div>
-                    </div>
+                    <h3>How UPI Works</h3>
+                    <p>UPI uses a single mobile application for accessing different bank accounts. It works by creating a unique Virtual Payment Address (VPA) for each user, eliminating the need to share bank details.</p>
                     
-                    <div class="topic-card">
-                        <div class="topic-thumbnail"></div>
-                        <div class="topic-title">Digital Safety</div>
-                        <div class="topic-progress">
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 0%"></div>
-                            </div>
-                        </div>
-                    </div>
+                    <h3>Key Benefits</h3>
+                    <ul>
+                        <li>Instant money transfer 24/7</li>
+                        <li>Single mobile app for multiple bank accounts</li>
+                        <li>No need to enter bank details</li>
+                        <li>Secure with two-factor authentication</li>
+                        <li>Supports both P2P and merchant payments</li>
+                    </ul>
+                    
+                    <button class="btn btn-success mark-complete" data-topic="upi">Mark as Completed (+5 FinCoins)</button>
+                </div>
+                
+                <div class="content-section">
+                    <h2>Budgeting Basics</h2>
+                    <p>Budgeting is the process of creating a plan to spend your money. This spending plan is called a budget. Creating this spending plan allows you to determine in advance whether you will have enough money to do the things you need to do or would like to do.</p>
+                    
+                    <h3>Steps to Create a Budget</h3>
+                    <ol>
+                        <li>Calculate your net income</li>
+                        <li>Track your spending</li>
+                        <li>Set realistic goals</li>
+                        <li>Make a plan</li>
+                        <li>Adjust your spending to stay on budget</li>
+                        <li>Review your budget regularly</li>
+                    </ol>
+                    
+                    <h3>50/30/20 Rule</h3>
+                    <p>A popular budgeting method is the 50/30/20 rule:</p>
+                    <ul>
+                        <li><strong>50%</strong> for needs (rent, groceries, utilities)</li>
+                        <li><strong>30%</strong> for wants (entertainment, dining out)</li>
+                        <li><strong>20%</strong> for savings and debt repayment</li>
+                    </ul>
+                    
+                    <button class="btn btn-success mark-complete" data-topic="budgeting">Mark as Completed (+5 FinCoins)</button>
                 </div>
             </div>
             
             <div class="subsection" id="play-subsection">
-                <div class="quiz-card">
-                    <div class="quiz-icon">?</div>
-                    <div class="quiz-content">
-                        <h3>Level 1: Digital Safety</h3>
-                        <p>Test your knowledge on online financial security</p>
+                <div class="quiz-container" id="quiz-1">
+                    <div class="quiz-question">What does UPI stand for in banking?</div>
+                    <div class="quiz-options">
+                        <div class="quiz-option" data-correct="true">Unified Payments Interface</div>
+                        <div class="quiz-option">Universal Payment Integration</div>
+                        <div class="quiz-option">United Payment Institution</div>
+                        <div class="quiz-option">Unified Personal Investment</div>
                     </div>
-                    <div class="quiz-reward">+10 <span style="margin-left: 5px;">🪙</span></div>
+                    <button class="btn submit-quiz" data-quiz="1">Submit Answer</button>
+                    <div class="quiz-result"></div>
                 </div>
                 
-                <div class="quiz-card">
-                    <div class="quiz-icon">?</div>
-                    <div class="quiz-content">
-                        <h3>Level 2: Banking Basics</h3>
-                        <p>Understanding different types of bank accounts</p>
+                <div class="quiz-container" id="quiz-2">
+                    <div class="quiz-question">Which of these is NOT a benefit of budgeting?</div>
+                    <div class="quiz-options">
+                        <div class="quiz-option">Helps achieve financial goals</div>
+                        <div class="quiz-option">Reduces financial stress</div>
+                        <div class="quiz-option" data-correct="true">Guarantees wealth accumulation</div>
+                        <div class="quiz-option">Provides spending control</div>
                     </div>
-                    <div class="quiz-reward">+15 <span style="margin-left: 5px;">🪙</span></div>
+                    <button class="btn submit-quiz" data-quiz="2">Submit Answer</button>
+                    <div class="quiz-result"></div>
                 </div>
                 
-                <div class="quiz-card">
-                    <div class="quiz-icon">?</div>
-                    <div class="quiz-content">
-                        <h3>Level 3: Investment Fundamentals</h3>
-                        <p>Learn about stocks, bonds, and mutual funds</p>
+                <div class="quiz-container" id="quiz-3">
+                    <div class="quiz-question">According to the 50/30/20 rule, what percentage should go to savings?</div>
+                    <div class="quiz-options">
+                        <div class="quiz-option">10%</div>
+                        <div class="quiz-option">15%</div>
+                        <div class="quiz-option" data-correct="true">20%</div>
+                        <div class="quiz-option">30%</div>
                     </div>
-                    <div class="quiz-reward">+20 <span style="margin-left: 5px;">🪙</span></div>
+                    <button class="btn submit-quiz" data-quiz="3">Submit Answer</button>
+                    <div class="quiz-result"></div>
                 </div>
             </div>
         </div>
@@ -1099,16 +1254,16 @@
         <!-- Wallet Section -->
         <div class="screen section-screen" id="wallet-screen">
             <div class="section-header">
-                <div class="back-btn">←</div>
+                <div class="back-btn"><i class="fas fa-arrow-left"></i></div>
                 <h2 class="section-title">Your Wallet</h2>
             </div>
             
             <div class="balance-card">
                 <div class="balance-header">
-                    <div class="balance-icon">🪙</div>
+                    <div class="balance-icon"><i class="fas fa-coins"></i></div>
                     <h3>FinCoin Balance</h3>
                 </div>
-                <div class="balance-amount">1,250</div>
+                <div class="balance-amount" id="user-balance">0</div>
             </div>
             
             <div class="history-card">
@@ -1122,77 +1277,54 @@
                             <th>Coins</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>05 Nov 2025</td>
-                            <td>12:40 PM</td>
-                            <td>Completed Quiz 1</td>
-                            <td class="coin-earned">+10</td>
-                        </tr>
-                        <tr>
-                            <td>04 Nov 2025</td>
-                            <td>10:15 AM</td>
-                            <td>Watched Video: Budgeting</td>
-                            <td class="coin-earned">+5</td>
-                        </tr>
-                        <tr>
-                            <td>03 Nov 2025</td>
-                            <td>03:30 PM</td>
-                            <td>Daily Login Streak</td>
-                            <td class="coin-earned">+2</td>
-                        </tr>
-                        <tr>
-                            <td>02 Nov 2025</td>
-                            <td>02:20 PM</td>
-                            <td>Completed Quiz 2</td>
-                            <td class="coin-earned">+15</td>
-                        </tr>
+                    <tbody id="transaction-history">
+                        <!-- Transactions will be populated by JavaScript -->
                     </tbody>
                 </table>
             </div>
             
-            <button class="btn" style="width: 100%; margin-top: 20px;" disabled>Redeem Coins (Coming Soon)</button>
+            <button class="btn" id="redeem-btn" style="width: 100%; margin-top: 20px;">Redeem Coins (Coming Soon)</button>
         </div>
         
         <!-- News Section -->
         <div class="screen section-screen" id="news-screen">
             <div class="section-header">
-                <div class="back-btn">←</div>
+                <div class="back-btn"><i class="fas fa-arrow-left"></i></div>
                 <h2 class="section-title">Financial News</h2>
             </div>
             
             <div class="news-card">
-                <div class="news-title">New Fraud Awareness Guidelines Issued</div>
+                <div class="news-title">RBI Issues New Guidelines for Digital Lending</div>
                 <div class="news-meta">
-                    <span>05 Nov 2025</span>
+                    <span>15 Nov 2023</span>
                     <span>Source: RBI</span>
                 </div>
                 <div class="news-description">
-                    The Reserve Bank of India has issued new guidelines to enhance fraud awareness among digital payment users. These guidelines focus on...
+                    The Reserve Bank of India has issued comprehensive guidelines for digital lending to enhance transparency and customer protection. The new framework mandates direct disbursement of loans to borrowers' accounts and prohibits automatic increase in credit limits.
                 </div>
                 <button class="btn" style="padding: 8px 16px; font-size: 0.9rem;">Read More</button>
             </div>
             
             <div class="news-card">
-                <div class="news-title">UPI Transactions Cross 10 Billion Mark</div>
+                <div class="news-title">UPI Transactions Cross 10 Billion Mark Monthly</div>
                 <div class="news-meta">
-                    <span>03 Nov 2025</span>
+                    <span>10 Nov 2023</span>
                     <span>Source: NPCI</span>
                 </div>
                 <div class="news-description">
-                    Unified Payments Interface (UPI) transactions have crossed the 10 billion mark this month, showing a 58% year-on-year growth...
+                    Unified Payments Interface (UPI) transactions have crossed the 10 billion mark per month, showing a 58% year-on-year growth. NPCI is planning to introduce new features including UPI Lite for smaller transactions and credit card linking.
                 </div>
                 <button class="btn" style="padding: 8px 16px; font-size: 0.9rem;">Read More</button>
             </div>
             
             <div class="news-card">
-                <div class="news-title">Financial Literacy Program for Students</div>
+                <div class="news-title">SEBI Simplifies KYC Process for Investors</div>
                 <div class="news-meta">
-                    <span>01 Nov 2025</span>
-                    <span>Source: Ministry of Finance</span>
+                    <span>05 Nov 2023</span>
+                    <span>Source: SEBI</span>
                 </div>
                 <div class="news-description">
-                    The government has launched a new financial literacy program targeting school students to improve money management skills from an early age...
+                    The Securities and Exchange Board of India has simplified the KYC registration process for investors. The new system allows for instant in-person verification through video calls and reduces documentation requirements for small investors.
                 </div>
                 <button class="btn" style="padding: 8px 16px; font-size: 0.9rem;">Read More</button>
             </div>
@@ -1201,63 +1333,27 @@
         <!-- Leaderboard Section -->
         <div class="screen section-screen" id="leaderboard-screen">
             <div class="section-header">
-                <div class="back-btn">←</div>
+                <div class="back-btn"><i class="fas fa-arrow-left"></i></div>
                 <h2 class="section-title">Leaderboard</h2>
             </div>
             
-            <div class="leaderboard-card">
-                <div class="rank rank-1">1</div>
-                <div class="user-info">
-                    <div class="user-name">Harsheel Kumar Sahoo</div>
-                </div>
-                <div class="user-coins">1200 🪙</div>
-            </div>
-            
-            <div class="leaderboard-card">
-                <div class="rank rank-2">2</div>
-                <div class="user-info">
-                    <div class="user-name">Anik Ghosh</div>
-                </div>
-                <div class="user-coins">980 🪙</div>
-            </div>
-            
-            <div class="leaderboard-card">
-                <div class="rank rank-3">3</div>
-                <div class="user-info">
-                    <div class="user-name">Parth Variya</div>
-                </div>
-                <div class="user-coins">860 🪙</div>
-            </div>
-            
-            <div class="leaderboard-card">
-                <div class="rank">4</div>
-                <div class="user-info">
-                    <div class="user-name">Rahul Sharma</div>
-                </div>
-                <div class="user-coins">750 🪙</div>
-            </div>
-            
-            <div class="leaderboard-card">
-                <div class="rank">5</div>
-                <div class="user-info">
-                    <div class="user-name">Priya Patel</div>
-                </div>
-                <div class="user-coins">690 🪙</div>
+            <div id="leaderboard-container">
+                <!-- Leaderboard will be populated by JavaScript -->
             </div>
         </div>
         
         <!-- Profile Section -->
         <div class="screen section-screen" id="profile-screen">
             <div class="section-header">
-                <div class="back-btn">←</div>
+                <div class="back-btn"><i class="fas fa-arrow-left"></i></div>
                 <h2 class="section-title">Your Profile</h2>
             </div>
             
             <div class="profile-header">
-                <div class="profile-avatar">H</div>
+                <div class="profile-avatar" id="profile-avatar">U</div>
                 <div class="profile-info">
-                    <h2>Harsheel Kumar Sahoo</h2>
-                    <p>Member since October 2025</p>
+                    <h2 id="profile-name">User</h2>
+                    <p id="profile-role">Member</p>
                 </div>
             </div>
             
@@ -1265,19 +1361,19 @@
                 <h3>Personal Information</h3>
                 <div class="info-item">
                     <span>Name</span>
-                    <span>Harsheel Kumar Sahoo</span>
+                    <span id="info-name">User</span>
                 </div>
                 <div class="info-item">
-                    <span>Age</span>
-                    <span>24</span>
+                    <span>Email</span>
+                    <span id="info-email">user@wiselyfin.com</span>
                 </div>
                 <div class="info-item">
-                    <span>State</span>
-                    <span>Odisha</span>
+                    <span>Role</span>
+                    <span id="info-role">User</span>
                 </div>
                 <div class="info-item">
-                    <span>Language</span>
-                    <span>English</span>
+                    <span>Member Since</span>
+                    <span id="info-join">November 2023</span>
                 </div>
             </div>
             
@@ -1285,37 +1381,36 @@
                 <h3>Learning Progress</h3>
                 <div class="info-item">
                     <span>Courses Completed</span>
-                    <span>5</span>
+                    <span id="info-courses">0</span>
                 </div>
                 <div class="info-item">
                     <span>Quizzes Taken</span>
-                    <span>12</span>
+                    <span id="info-quizzes">0</span>
                 </div>
                 <div class="info-item">
                     <span>Current Streak</span>
-                    <span>7 days</span>
+                    <span id="info-streak">0 days</span>
                 </div>
                 <div class="info-item">
                     <span>Total FinCoins</span>
-                    <span>1,250 🪙</span>
+                    <span id="info-coins">0 🪙</span>
                 </div>
             </div>
             
             <div class="profile-card">
                 <h3>Badges Earned</h3>
-                <div class="badges-container">
-                    <div class="badge">🏆</div>
-                    <div class="badge">⭐</div>
-                    <div class="badge">🚀</div>
-                    <div class="badge">💡</div>
+                <div class="badges-container" id="badges-container">
+                    <!-- Badges will be populated by JavaScript -->
                 </div>
             </div>
+            
+            <button class="btn btn-secondary" id="logout-btn" style="width: 100%; margin-top: 20px;">Logout</button>
         </div>
         
         <!-- About Us Section -->
         <div class="screen section-screen" id="about-screen">
             <div class="section-header">
-                <div class="back-btn">←</div>
+                <div class="back-btn"><i class="fas fa-arrow-left"></i></div>
                 <h2 class="section-title">About Us</h2>
             </div>
             
@@ -1331,6 +1426,12 @@
                 <h2>Meet Our Team</h2>
                 <div class="team-grid">
                     <div class="team-card">
+                        <div class="team-avatar">H</div>
+                        <div class="team-name">Harsheel Sahoo</div>
+                        <div class="team-role">UX Developer</div>
+                    </div>
+                    
+                    <div class="team-card">
                         <div class="team-avatar">A</div>
                         <div class="team-name">Anik Ghosh</div>
                         <div class="team-role">App Design Lead</div>
@@ -1341,46 +1442,79 @@
                         <div class="team-name">Parth Variya</div>
                         <div class="team-role">Content Strategist</div>
                     </div>
-                    
-                    <div class="team-card">
-                        <div class="team-avatar">H</div>
-                        <div class="team-name">Harsheel Sahoo</div>
-                        <div class="team-role">UX Developer</div>
-                    </div>
                 </div>
             </div>
         </div>
         
         <!-- Bottom Navigation -->
-        <div class="bottom-navbar">
+        <div class="bottom-navbar" id="bottom-navbar">
             <div class="nav-item active" data-screen="dashboard">
-                <div class="nav-icon">🏠</div>
+                <div class="nav-icon"><i class="fas fa-home"></i></div>
                 <div class="nav-label">Home</div>
             </div>
             <div class="nav-item" data-screen="play-learn">
-                <div class="nav-icon">🎮</div>
+                <div class="nav-icon"><i class="fas fa-gamepad"></i></div>
                 <div class="nav-label">Learn</div>
             </div>
             <div class="nav-item" data-screen="wallet">
-                <div class="nav-icon">💰</div>
+                <div class="nav-icon"><i class="fas fa-wallet"></i></div>
                 <div class="nav-label">Wallet</div>
             </div>
             <div class="nav-item" data-screen="news">
-                <div class="nav-icon">📰</div>
+                <div class="nav-icon"><i class="fas fa-newspaper"></i></div>
                 <div class="nav-label">News</div>
             </div>
             <div class="nav-item" data-screen="leaderboard">
-                <div class="nav-icon">🏆</div>
+                <div class="nav-icon"><i class="fas fa-trophy"></i></div>
                 <div class="nav-label">Rank</div>
-            </div>
-            <div class="nav-item" data-screen="profile">
-                <div class="nav-icon">👤</div>
-                <div class="nav-label">Profile</div>
             </div>
         </div>
     </div>
 
     <script>
+        // User Database
+        const users = [
+            { id: 1, name: "Harsheel", username: "harsheel@wiselyfin", password: "harsheel", role: "admin", coins: 1250, completedCourses: 3, completedQuizzes: 5 },
+            { id: 2, name: "Parth", username: "parth@wiselyfin", password: "parth", role: "admin", coins: 980, completedCourses: 2, completedQuizzes: 4 },
+            { id: 3, name: "Anik", username: "anik@wiselyfin", password: "anik", role: "admin", coins: 860, completedCourses: 2, completedQuizzes: 3 },
+            { id: 4, name: "User", username: "user@wiselyfin", password: "user", role: "user", coins: 450, completedCourses: 1, completedQuizzes: 2 }
+        ];
+
+        // Transaction History
+        const transactions = {
+            1: [
+                { date: "05 Nov 2023", time: "12:40 PM", task: "Completed Quiz 1", coins: 10 },
+                { date: "04 Nov 2023", time: "10:15 AM", task: "Watched Video: Budgeting", coins: 5 },
+                { date: "03 Nov 2023", time: "03:30 PM", task: "Daily Login Streak", coins: 2 },
+                { date: "02 Nov 2023", time: "02:20 PM", task: "Completed Quiz 2", coins: 15 },
+                { date: "01 Nov 2023", time: "11:10 AM", task: "Completed UPI Course", coins: 10 }
+            ],
+            2: [
+                { date: "04 Nov 2023", time: "09:25 AM", task: "Completed Quiz 1", coins: 10 },
+                { date: "03 Nov 2023", time: "02:15 PM", task: "Watched Video: UPI", coins: 5 },
+                { date: "02 Nov 2023", time: "04:40 PM", task: "Daily Login Streak", coins: 2 },
+                { date: "01 Nov 2023", time: "01:30 PM", task: "Completed Quiz 2", coins: 15 }
+            ],
+            3: [
+                { date: "03 Nov 2023", time: "11:20 AM", task: "Completed Quiz 1", coins: 10 },
+                { date: "02 Nov 2023", time: "03:15 PM", task: "Watched Video: Budgeting", coins: 5 },
+                { date: "01 Nov 2023", time: "10:45 AM", task: "Daily Login Streak", coins: 2 }
+            ],
+            4: [
+                { date: "02 Nov 2023", time: "02:30 PM", task: "Completed Quiz 1", coins: 10 },
+                { date: "01 Nov 2023", time: "11:15 AM", task: "Watched Video: UPI", coins: 5 }
+            ]
+        };
+
+        // Completed items tracking
+        const completedItems = {
+            courses: [],
+            quizzes: []
+        };
+
+        // Current user
+        let currentUser = null;
+
         // DOM Elements
         const screens = document.querySelectorAll('.screen');
         const startScreen = document.getElementById('start-screen');
@@ -1391,11 +1525,19 @@
         const authForms = document.querySelectorAll('.auth-form');
         const loginBtn = document.getElementById('login-btn');
         const signupBtn = document.getElementById('signup-btn');
+        const loginError = document.getElementById('login-error');
+        const signupError = document.getElementById('signup-error');
+        const signupSuccess = document.getElementById('signup-success');
         const tabCards = document.querySelectorAll('.tab-card');
         const backBtns = document.querySelectorAll('.back-btn');
         const navItems = document.querySelectorAll('.nav-item');
+        const bottomNavbar = document.getElementById('bottom-navbar');
         const playLearnTabs = document.querySelectorAll('.play-learn-tab');
         const subsections = document.querySelectorAll('.subsection');
+        const markCompleteBtns = document.querySelectorAll('.mark-complete');
+        const quizOptions = document.querySelectorAll('.quiz-option');
+        const submitQuizBtns = document.querySelectorAll('.submit-quiz');
+        const logoutBtn = document.getElementById('logout-btn');
 
         // Show specific screen
         function showScreen(screenId) {
@@ -1404,14 +1546,153 @@
             });
             document.getElementById(screenId).classList.add('active');
             
+            // Show/hide bottom navbar
+            if (screenId === 'dashboard-screen' || screenId.includes('-screen') && screenId !== 'start-screen' && screenId !== 'auth-screen') {
+                bottomNavbar.classList.add('visible');
+            } else {
+                bottomNavbar.classList.remove('visible');
+            }
+            
             // Update bottom nav active state
             if (screenId !== 'start-screen' && screenId !== 'auth-screen') {
                 navItems.forEach(item => {
                     item.classList.remove('active');
-                    if (item.getAttribute('data-screen') === screenId) {
+                    if (item.getAttribute('data-screen') === screenId.replace('-screen', '')) {
                         item.classList.add('active');
                     }
                 });
+            }
+
+            // Update user data if logged in
+            if (currentUser && screenId === 'dashboard-screen') {
+                updateDashboard();
+            }
+            
+            if (currentUser && screenId === 'wallet-screen') {
+                updateWallet();
+            }
+            
+            if (currentUser && screenId === 'profile-screen') {
+                updateProfile();
+            }
+            
+            if (currentUser && screenId === 'leaderboard-screen') {
+                updateLeaderboard();
+            }
+        }
+
+        // Update dashboard with user data
+        function updateDashboard() {
+            document.getElementById('user-greeting').textContent = `Hi ${currentUser.name} 👋`;
+        }
+
+        // Update wallet with user data
+        function updateWallet() {
+            document.getElementById('user-balance').textContent = currentUser.coins;
+            
+            const transactionHistory = document.getElementById('transaction-history');
+            transactionHistory.innerHTML = '';
+            
+            if (transactions[currentUser.id]) {
+                transactions[currentUser.id].forEach(transaction => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${transaction.date}</td>
+                        <td>${transaction.time}</td>
+                        <td>${transaction.task}</td>
+                        <td class="coin-earned">+${transaction.coins}</td>
+                    `;
+                    transactionHistory.appendChild(row);
+                });
+            }
+        }
+
+        // Update profile with user data
+        function updateProfile() {
+            document.getElementById('profile-avatar').textContent = currentUser.name.charAt(0);
+            document.getElementById('profile-name').textContent = currentUser.name;
+            document.getElementById('profile-role').textContent = currentUser.role === 'admin' ? 'Admin Member' : 'Member';
+            
+            document.getElementById('info-name').textContent = currentUser.name;
+            document.getElementById('info-email').textContent = currentUser.username;
+            document.getElementById('info-role').textContent = currentUser.role === 'admin' ? 'Administrator' : 'Standard User';
+            document.getElementById('info-join').textContent = 'November 2023';
+            
+            document.getElementById('info-courses').textContent = currentUser.completedCourses;
+            document.getElementById('info-quizzes').textContent = currentUser.completedQuizzes;
+            document.getElementById('info-streak').textContent = '7 days';
+            document.getElementById('info-coins').textContent = `${currentUser.coins} 🪙`;
+            
+            // Update badges
+            const badgesContainer = document.getElementById('badges-container');
+            badgesContainer.innerHTML = '';
+            
+            if (currentUser.coins >= 100) {
+                badgesContainer.innerHTML += '<div class="badge">🥇</div>';
+            }
+            if (currentUser.completedCourses >= 2) {
+                badgesContainer.innerHTML += '<div class="badge">📚</div>';
+            }
+            if (currentUser.completedQuizzes >= 3) {
+                badgesContainer.innerHTML += '<div class="badge">🧠</div>';
+            }
+            if (currentUser.role === 'admin') {
+                badgesContainer.innerHTML += '<div class="badge">⭐</div>';
+            }
+        }
+
+        // Update leaderboard
+        function updateLeaderboard() {
+            const leaderboardContainer = document.getElementById('leaderboard-container');
+            leaderboardContainer.innerHTML = '';
+            
+            // Sort users by coins
+            const sortedUsers = [...users].sort((a, b) => b.coins - a.coins);
+            
+            sortedUsers.forEach((user, index) => {
+                const rankClass = index === 0 ? 'rank-1' : index === 1 ? 'rank-2' : index === 2 ? 'rank-3' : '';
+                
+                const card = document.createElement('div');
+                card.className = 'leaderboard-card';
+                card.innerHTML = `
+                    <div class="rank ${rankClass}">${index + 1}</div>
+                    <div class="user-info">
+                        <div class="user-name">${user.name}</div>
+                    </div>
+                    <div class="user-coins">${user.coins} 🪙</div>
+                `;
+                leaderboardContainer.appendChild(card);
+            });
+        }
+
+        // Add coins to user
+        function addCoins(amount, task) {
+            currentUser.coins += amount;
+            
+            // Add to transaction history
+            if (!transactions[currentUser.id]) {
+                transactions[currentUser.id] = [];
+            }
+            
+            const now = new Date();
+            const date = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+            const time = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+            
+            transactions[currentUser.id].unshift({
+                date: date,
+                time: time,
+                task: task,
+                coins: amount
+            });
+            
+            // Update UI if on wallet screen
+            if (document.getElementById('wallet-screen').classList.contains('active')) {
+                updateWallet();
+            }
+            
+            // Update leaderboard if on leaderboard screen
+            if (document.getElementById('leaderboard-screen').classList.contains('active')) {
+                updateLeaderboard();
             }
         }
 
@@ -1429,6 +1710,11 @@
                         form.classList.add('active');
                     }
                 });
+                
+                // Clear messages
+                loginError.style.display = 'none';
+                signupError.style.display = 'none';
+                signupSuccess.style.display = 'none';
             });
         });
 
@@ -1449,19 +1735,151 @@
             });
         });
 
+        // Mark course as complete
+        markCompleteBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const topic = this.getAttribute('data-topic');
+                
+                if (!completedItems.courses.includes(topic)) {
+                    completedItems.courses.push(topic);
+                    currentUser.completedCourses++;
+                    addCoins(5, `Completed ${topic.toUpperCase()} Course`);
+                    
+                    this.textContent = 'Completed ✓';
+                    this.disabled = true;
+                    this.classList.remove('btn-success');
+                    
+                    // Update profile
+                    updateProfile();
+                }
+            });
+        });
+
+        // Quiz option selection
+        quizOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                // Remove selection from other options in the same quiz
+                const parentQuiz = this.closest('.quiz-container');
+                parentQuiz.querySelectorAll('.quiz-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                
+                // Select this option
+                this.classList.add('selected');
+            });
+        });
+
+        // Submit quiz answer
+        submitQuizBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const quizId = this.getAttribute('data-quiz');
+                const quizContainer = document.getElementById(`quiz-${quizId}`);
+                const selectedOption = quizContainer.querySelector('.quiz-option.selected');
+                const resultDiv = quizContainer.querySelector('.quiz-result');
+                
+                if (!selectedOption) {
+                    alert('Please select an answer!');
+                    return;
+                }
+                
+                const isCorrect = selectedOption.getAttribute('data-correct') === 'true';
+                
+                if (isCorrect) {
+                    resultDiv.textContent = 'Correct! Well done.';
+                    resultDiv.className = 'quiz-result correct';
+                    
+                    if (!completedItems.quizzes.includes(parseInt(quizId))) {
+                        completedItems.quizzes.push(parseInt(quizId));
+                        currentUser.completedQuizzes++;
+                        addCoins(10, `Completed Quiz ${quizId}`);
+                        
+                        // Update profile
+                        updateProfile();
+                    }
+                    
+                    this.disabled = true;
+                    this.textContent = 'Completed ✓';
+                } else {
+                    resultDiv.textContent = 'Incorrect. Try again!';
+                    resultDiv.className = 'quiz-result incorrect';
+                }
+                
+                resultDiv.style.display = 'block';
+            });
+        });
+
         // Event Listeners
         getStartedBtn.addEventListener('click', () => {
             showScreen('auth-screen');
         });
 
         loginBtn.addEventListener('click', () => {
-            // In a real app, you would validate credentials here
-            showScreen('dashboard-screen');
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            // Find user
+            const user = users.find(u => u.username === email && u.password === password);
+            
+            if (user) {
+                currentUser = user;
+                showScreen('dashboard-screen');
+                updateDashboard();
+                loginError.style.display = 'none';
+            } else {
+                loginError.textContent = 'Invalid email or password. Please try again.';
+                loginError.style.display = 'block';
+            }
         });
 
         signupBtn.addEventListener('click', () => {
-            // In a real app, you would create a new account here
-            showScreen('dashboard-screen');
+            const name = document.getElementById('signup-name').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            const confirm = document.getElementById('signup-confirm').value;
+            
+            // Validation
+            if (!name || !email || !password || !confirm) {
+                signupError.textContent = 'All fields are required.';
+                signupError.style.display = 'block';
+                signupSuccess.style.display = 'none';
+                return;
+            }
+            
+            if (password !== confirm) {
+                signupError.textContent = 'Passwords do not match.';
+                signupError.style.display = 'block';
+                signupSuccess.style.display = 'none';
+                return;
+            }
+            
+            if (users.find(u => u.username === email)) {
+                signupError.textContent = 'User with this email already exists.';
+                signupError.style.display = 'block';
+                signupSuccess.style.display = 'none';
+                return;
+            }
+            
+            // Create new user (in a real app, this would be sent to a server)
+            const newUser = {
+                id: users.length + 1,
+                name: name,
+                username: email,
+                password: password,
+                role: 'user',
+                coins: 0,
+                completedCourses: 0,
+                completedQuizzes: 0
+            };
+            
+            users.push(newUser);
+            transactions[newUser.id] = [];
+            
+            signupError.style.display = 'none';
+            signupSuccess.textContent = 'Account created successfully! You can now login.';
+            signupSuccess.style.display = 'block';
+            
+            // Switch to login tab
+            authTabs[0].click();
         });
 
         // Tab card clicks
@@ -1487,6 +1905,12 @@
             });
         });
 
+        // Logout
+        logoutBtn.addEventListener('click', () => {
+            currentUser = null;
+            showScreen('start-screen');
+        });
+
         // Add animation delays to tab cards
         tabCards.forEach((card, index) => {
             card.style.animationDelay = `${index * 0.1}s`;
@@ -1496,6 +1920,12 @@
         const leaderboardCards = document.querySelectorAll('.leaderboard-card');
         leaderboardCards.forEach((card, index) => {
             card.style.animationDelay = `${index * 0.1}s`;
+        });
+
+        // Initialize with demo user logged in for testing
+        window.addEventListener('load', () => {
+            // Uncomment the line below to auto-login with demo user for testing
+            // currentUser = users[3]; showScreen('dashboard-screen'); updateDashboard();
         });
     </script>
 </body>
