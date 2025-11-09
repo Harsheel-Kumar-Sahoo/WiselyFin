@@ -8,6 +8,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
+            /* Light Theme (Default) */
             --black: #0a0908ff;
             --gunmetal: #22333bff;
             --almond: #eae0d5ff;
@@ -18,10 +19,31 @@
             --gold: #FFD700;
             --text-dark: #0A0A0A;
             --text-light: #FFFFFF;
+            --card-bg: #FFFFFF;
             --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
             --transition: all 0.3s ease;
             --success: #28a745;
             --error: #dc3545;
+            --navbar-bg: rgba(255, 255, 255, 0.95);
+            --input-bg: #FFFFFF;
+        }
+
+        /* Dark Theme */
+        [data-theme="dark"] {
+            --black: #eae0d5ff;
+            --gunmetal: #a0b2bfff;
+            --almond: #22333bff;
+            --khaki: #5e503fff;
+            --walnut-brown: #c6ac8fff;
+            --primary-blue: #4d9eff;
+            --background: #0a0a0a;
+            --gold: #FFD700;
+            --text-dark: #FFFFFF;
+            --text-light: #0A0A0A;
+            --card-bg: #1a1a1a;
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            --navbar-bg: rgba(26, 26, 26, 0.95);
+            --input-bg: #2d2d2d;
         }
 
         * {
@@ -35,12 +57,36 @@
             background-color: var(--background);
             color: var(--text-dark);
             overflow-x: hidden;
+            transition: var(--transition);
         }
 
         .app-container {
             width: 100%;
             min-height: 100vh;
             position: relative;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary-blue);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: var(--card-shadow);
+            z-index: 1001;
+            transition: var(--transition);
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
         }
 
         /* Screen Transitions */
@@ -99,11 +145,13 @@
             padding: 12px 16px;
             border-radius: 50px;
             border: none;
-            background: rgba(255, 255, 255, 0.9);
+            background: var(--input-bg);
+            color: var(--text-dark);
             box-shadow: var(--card-shadow);
             font-size: 1rem;
             outline: none;
             cursor: pointer;
+            transition: var(--transition);
         }
 
         .btn {
@@ -139,6 +187,10 @@
             background: linear-gradient(to right, var(--success), #1e7e34);
         }
 
+        .btn-logout {
+            background: linear-gradient(to right, #dc3545, #c82333);
+        }
+
         .illustration {
             margin-top: 40px;
             max-width: 300px;
@@ -160,7 +212,7 @@
             display: flex;
             width: 100%;
             max-width: 900px;
-            background: white;
+            background: var(--card-bg);
             border-radius: 20px;
             overflow: hidden;
             box-shadow: var(--card-shadow);
@@ -194,6 +246,7 @@
             font-weight: 500;
             transition: var(--transition);
             border-bottom: 3px solid transparent;
+            color: var(--text-dark);
         }
 
         .auth-tab.active {
@@ -218,6 +271,7 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 500;
+            color: var(--text-dark);
         }
 
         .form-group input {
@@ -225,6 +279,8 @@
             padding: 12px 16px;
             border-radius: 10px;
             border: 1px solid #ddd;
+            background: var(--input-bg);
+            color: var(--text-dark);
             font-size: 1rem;
             transition: var(--transition);
         }
@@ -269,21 +325,35 @@
         /* Dashboard */
         .dashboard-screen {
             background: var(--background);
-            padding-bottom: 80px; /* Space for bottom navbar */
+            padding-bottom: 80px;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
         }
 
         .greeting {
-            margin-bottom: 30px;
             padding: 20px;
-            background: white;
+            background: var(--card-bg);
             border-radius: 15px;
             box-shadow: var(--card-shadow);
             animation: slideDown 0.5s ease;
+            flex: 1;
+            margin-right: 15px;
         }
 
         .greeting h1 {
             font-size: 1.8rem;
             font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .greeting p {
+            color: var(--text-dark);
+            opacity: 0.8;
         }
 
         .dashboard-tabs {
@@ -296,7 +366,7 @@
             display: flex;
             align-items: center;
             padding: 20px;
-            background: white;
+            background: var(--card-bg);
             border-radius: 15px;
             box-shadow: var(--card-shadow);
             transition: var(--transition);
@@ -330,6 +400,7 @@
         .tab-content h3 {
             font-weight: 600;
             margin-bottom: 5px;
+            color: var(--text-dark);
         }
 
         .tab-content p {
@@ -348,7 +419,7 @@
             bottom: 0;
             left: 0;
             width: 100%;
-            background: rgba(255, 255, 255, 0.95);
+            background: var(--navbar-bg);
             backdrop-filter: blur(10px);
             border-top: 1px solid #eee;
             display: flex;
@@ -406,7 +477,7 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: white;
+            background: var(--card-bg);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -414,6 +485,7 @@
             box-shadow: var(--card-shadow);
             cursor: pointer;
             transition: var(--transition);
+            color: var(--text-dark);
         }
 
         .back-btn:hover {
@@ -423,13 +495,14 @@
         .section-title {
             font-size: 1.5rem;
             font-weight: 600;
+            color: var(--text-dark);
         }
 
         /* Play & Learn Section */
         .play-learn-tabs {
             display: flex;
             margin-bottom: 20px;
-            background: white;
+            background: var(--card-bg);
             border-radius: 50px;
             padding: 5px;
             box-shadow: var(--card-shadow);
@@ -443,6 +516,7 @@
             cursor: pointer;
             transition: var(--transition);
             font-weight: 500;
+            color: var(--text-dark);
         }
 
         .play-learn-tab.active {
@@ -457,7 +531,7 @@
         }
 
         .topic-card {
-            background: white;
+            background: var(--card-bg);
             border-radius: 15px;
             overflow: hidden;
             box-shadow: var(--card-shadow);
@@ -485,6 +559,7 @@
         .topic-title {
             padding: 15px;
             font-weight: 600;
+            color: var(--text-dark);
         }
 
         .topic-progress {
@@ -506,7 +581,7 @@
         }
 
         .quiz-card {
-            background: white;
+            background: var(--card-bg);
             border-radius: 15px;
             padding: 20px;
             box-shadow: var(--card-shadow);
@@ -548,7 +623,7 @@
 
         /* Content Section */
         .content-section {
-            background: white;
+            background: var(--card-bg);
             border-radius: 15px;
             padding: 20px;
             margin-bottom: 20px;
@@ -564,6 +639,7 @@
         .content-section p {
             margin-bottom: 15px;
             line-height: 1.6;
+            color: var(--text-dark);
         }
 
         .content-section ul {
@@ -573,11 +649,12 @@
 
         .content-section li {
             margin-bottom: 8px;
+            color: var(--text-dark);
         }
 
         /* Quiz Section */
         .quiz-container {
-            background: white;
+            background: var(--card-bg);
             border-radius: 15px;
             padding: 20px;
             margin-bottom: 20px;
@@ -589,6 +666,7 @@
             font-weight: 600;
             margin-bottom: 15px;
             font-size: 1.1rem;
+            color: var(--text-dark);
         }
 
         .quiz-options {
@@ -602,14 +680,18 @@
             margin-bottom: 10px;
             cursor: pointer;
             transition: var(--transition);
+            background: var(--input-bg);
+            color: var(--text-dark);
         }
 
         .quiz-option:hover {
-            background: #f5f5f5;
+            background: var(--primary-blue);
+            color: white;
         }
 
         .quiz-option.selected {
-            background: rgba(0, 120, 255, 0.1);
+            background: var(--primary-blue);
+            color: white;
             border-color: var(--primary-blue);
         }
 
@@ -660,7 +742,7 @@
         }
 
         .history-card {
-            background: white;
+            background: var(--card-bg);
             border-radius: 15px;
             padding: 20px;
             box-shadow: var(--card-shadow);
@@ -676,6 +758,7 @@
             padding: 12px 15px;
             text-align: left;
             border-bottom: 1px solid #eee;
+            color: var(--text-dark);
         }
 
         .history-table th {
@@ -690,7 +773,7 @@
 
         /* News Section */
         .news-card {
-            background: white;
+            background: var(--card-bg);
             border-radius: 15px;
             padding: 20px;
             margin-bottom: 20px;
@@ -708,6 +791,7 @@
             font-weight: 600;
             margin-bottom: 10px;
             font-size: 1.1rem;
+            color: var(--text-dark);
         }
 
         .news-meta {
@@ -721,11 +805,12 @@
         .news-description {
             margin-bottom: 15px;
             line-height: 1.5;
+            color: var(--text-dark);
         }
 
         /* Leaderboard Section */
         .leaderboard-card {
-            background: white;
+            background: var(--card-bg);
             border-radius: 15px;
             padding: 20px;
             margin-bottom: 15px;
@@ -775,6 +860,7 @@
 
         .user-name {
             font-weight: 600;
+            color: var(--text-dark);
         }
 
         .user-coins {
@@ -786,7 +872,7 @@
         .profile-header {
             display: flex;
             align-items: center;
-            background: white;
+            background: var(--card-bg);
             border-radius: 15px;
             padding: 20px;
             margin-bottom: 20px;
@@ -810,6 +896,7 @@
         .profile-info h2 {
             font-weight: 600;
             margin-bottom: 5px;
+            color: var(--text-dark);
         }
 
         .profile-info p {
@@ -817,7 +904,7 @@
         }
 
         .profile-card {
-            background: white;
+            background: var(--card-bg);
             border-radius: 15px;
             padding: 20px;
             margin-bottom: 15px;
@@ -828,6 +915,7 @@
         .profile-card h3 {
             margin-bottom: 15px;
             font-weight: 600;
+            color: var(--text-dark);
         }
 
         .info-item {
@@ -861,7 +949,7 @@
 
         /* About Us Section */
         .about-card {
-            background: white;
+            background: var(--card-bg);
             border-radius: 15px;
             padding: 25px;
             margin-bottom: 20px;
@@ -872,11 +960,13 @@
         .about-card h2 {
             margin-bottom: 15px;
             font-weight: 600;
+            color: var(--text-dark);
         }
 
         .about-card p {
             line-height: 1.6;
             margin-bottom: 15px;
+            color: var(--text-dark);
         }
 
         .team-grid {
@@ -887,7 +977,7 @@
         }
 
         .team-card {
-            background: white;
+            background: var(--card-bg);
             border-radius: 15px;
             padding: 20px;
             text-align: center;
@@ -917,6 +1007,7 @@
         .team-name {
             font-weight: 600;
             margin-bottom: 5px;
+            color: var(--text-dark);
         }
 
         .team-role {
@@ -979,6 +1070,15 @@
             .nav-icon {
                 font-size: 1.4rem;
             }
+
+            .dashboard-header {
+                flex-direction: column;
+            }
+
+            .greeting {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -1006,6 +1106,11 @@
 </head>
 <body>
     <div class="app-container">
+        <!-- Theme Toggle -->
+        <div class="theme-toggle" id="theme-toggle">
+            <i class="fas fa-moon"></i>
+        </div>
+
         <!-- Start Screen -->
         <div class="screen start-screen active" id="start-screen">
             <h1 class="logo">WiselyFin</h1>
@@ -1090,9 +1195,14 @@
         
         <!-- Dashboard Screen -->
         <div class="screen dashboard-screen" id="dashboard-screen">
-            <div class="greeting">
-                <h1 id="user-greeting">Hi User 👋</h1>
-                <p>Ready to boost your financial knowledge today?</p>
+            <div class="dashboard-header">
+                <div class="greeting">
+                    <h1 id="user-greeting">Hi User 👋</h1>
+                    <p>Ready to boost your financial knowledge today?</p>
+                </div>
+                <button class="btn btn-logout" id="dashboard-logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
             </div>
             
             <div class="dashboard-tabs">
@@ -1167,114 +1277,14 @@
             </div>
             
             <div class="subsection active" id="learn-subsection">
-                <div class="content-section">
-                    <h2>Understanding UPI</h2>
-                    <p>Unified Payments Interface (UPI) is an instant real-time payment system developed by National Payments Corporation of India (NPCI). The interface facilitates inter-bank peer-to-peer (P2P) and person-to-merchant (P2M) transactions.</p>
-                    
-                    <h3>How UPI Works</h3>
-                    <p>UPI uses a single mobile application for accessing different bank accounts. It works by creating a unique Virtual Payment Address (VPA) for each user, eliminating the need to share bank details.</p>
-                    
-                    <h3>Key Benefits</h3>
-                    <ul>
-                        <li>Instant money transfer 24/7</li>
-                        <li>Single mobile app for multiple bank accounts</li>
-                        <li>No need to enter bank details</li>
-                        <li>Secure with two-factor authentication</li>
-                        <li>Supports both P2P and merchant payments</li>
-                    </ul>
-                    
-                    <button class="btn btn-success mark-complete" data-topic="upi" data-coins="5">Mark as Completed (+5 FinCoins)</button>
-                </div>
-                
-                <div class="content-section">
-                    <h2>Budgeting Basics</h2>
-                    <p>Budgeting is the process of creating a plan to spend your money. This spending plan is called a budget. Creating this spending plan allows you to determine in advance whether you will have enough money to do the things you need to do or would like to do.</p>
-                    
-                    <h3>Steps to Create a Budget</h3>
-                    <ol>
-                        <li>Calculate your net income</li>
-                        <li>Track your spending</li>
-                        <li>Set realistic goals</li>
-                        <li>Make a plan</li>
-                        <li>Adjust your spending to stay on budget</li>
-                        <li>Review your budget regularly</li>
-                    </ol>
-                    
-                    <h3>50/30/20 Rule</h3>
-                    <p>A popular budgeting method is the 50/30/20 rule:</p>
-                    <ul>
-                        <li><strong>50%</strong> for needs (rent, groceries, utilities)</li>
-                        <li><strong>30%</strong> for wants (entertainment, dining out)</li>
-                        <li><strong>20%</strong> for savings and debt repayment</li>
-                    </ul>
-                    
-                    <button class="btn btn-success mark-complete" data-topic="budgeting" data-coins="5">Mark as Completed (+5 FinCoins)</button>
-                </div>
-
-                <div class="content-section">
-                    <h2>Digital Safety & Security</h2>
-                    <p>In today's digital age, protecting your financial information online is crucial. Learn how to safeguard your accounts and personal data from cyber threats.</p>
-                    
-                    <h3>Essential Security Practices</h3>
-                    <ul>
-                        <li>Use strong, unique passwords for each account</li>
-                        <li>Enable two-factor authentication</li>
-                        <li>Be cautious of phishing emails and messages</li>
-                        <li>Keep your software and apps updated</li>
-                        <li>Use secure networks for financial transactions</li>
-                    </ul>
-                    
-                    <button class="btn btn-success mark-complete" data-topic="security" data-coins="5">Mark as Completed (+5 FinCoins)</button>
+                <div id="courses-container">
+                    <!-- Courses will be loaded from Firestore -->
                 </div>
             </div>
             
             <div class="subsection" id="play-subsection">
-                <div class="quiz-container" id="quiz-1">
-                    <div class="quiz-question">What does UPI stand for in banking?</div>
-                    <div class="quiz-options">
-                        <div class="quiz-option" data-correct="true">Unified Payments Interface</div>
-                        <div class="quiz-option">Universal Payment Integration</div>
-                        <div class="quiz-option">United Payment Institution</div>
-                        <div class="quiz-option">Unified Personal Investment</div>
-                    </div>
-                    <button class="btn submit-quiz" data-quiz="1" data-coins="10">Submit Answer</button>
-                    <div class="quiz-result"></div>
-                </div>
-                
-                <div class="quiz-container" id="quiz-2">
-                    <div class="quiz-question">Which of these is NOT a benefit of budgeting?</div>
-                    <div class="quiz-options">
-                        <div class="quiz-option">Helps achieve financial goals</div>
-                        <div class="quiz-option">Reduces financial stress</div>
-                        <div class="quiz-option" data-correct="true">Guarantees wealth accumulation</div>
-                        <div class="quiz-option">Provides spending control</div>
-                    </div>
-                    <button class="btn submit-quiz" data-quiz="2" data-coins="10">Submit Answer</button>
-                    <div class="quiz-result"></div>
-                </div>
-                
-                <div class="quiz-container" id="quiz-3">
-                    <div class="quiz-question">According to the 50/30/20 rule, what percentage should go to savings?</div>
-                    <div class="quiz-options">
-                        <div class="quiz-option">10%</div>
-                        <div class="quiz-option">15%</div>
-                        <div class="quiz-option" data-correct="true">20%</div>
-                        <div class="quiz-option">30%</div>
-                    </div>
-                    <button class="btn submit-quiz" data-quiz="3" data-coins="10">Submit Answer</button>
-                    <div class="quiz-result"></div>
-                </div>
-
-                <div class="quiz-container" id="quiz-4">
-                    <div class="quiz-question">What is the most important practice for digital financial safety?</div>
-                    <div class="quiz-options">
-                        <div class="quiz-option">Using the same password for all accounts</div>
-                        <div class="quiz-option">Sharing passwords with family members</div>
-                        <div class="quiz-option" data-correct="true">Enabling two-factor authentication</div>
-                        <div class="quiz-option">Using public Wi-Fi for transactions</div>
-                    </div>
-                    <button class="btn submit-quiz" data-quiz="4" data-coins="10">Submit Answer</button>
-                    <div class="quiz-result"></div>
+                <div id="quizzes-container">
+                    <!-- Quizzes will be loaded from Firestore -->
                 </div>
             </div>
         </div>
@@ -1321,40 +1331,8 @@
                 <h2 class="section-title">Financial News</h2>
             </div>
             
-            <div class="news-card">
-                <div class="news-title">RBI Issues New Guidelines for Digital Lending</div>
-                <div class="news-meta">
-                    <span>15 Nov 2023</span>
-                    <span>Source: RBI</span>
-                </div>
-                <div class="news-description">
-                    The Reserve Bank of India has issued comprehensive guidelines for digital lending to enhance transparency and customer protection. The new framework mandates direct disbursement of loans to borrowers' accounts and prohibits automatic increase in credit limits.
-                </div>
-                <button class="btn" style="padding: 8px 16px; font-size: 0.9rem;">Read More</button>
-            </div>
-            
-            <div class="news-card">
-                <div class="news-title">UPI Transactions Cross 10 Billion Mark Monthly</div>
-                <div class="news-meta">
-                    <span>10 Nov 2023</span>
-                    <span>Source: NPCI</span>
-                </div>
-                <div class="news-description">
-                    Unified Payments Interface (UPI) transactions have crossed the 10 billion mark per month, showing a 58% year-on-year growth. NPCI is planning to introduce new features including UPI Lite for smaller transactions and credit card linking.
-                </div>
-                <button class="btn" style="padding: 8px 16px; font-size: 0.9rem;">Read More</button>
-            </div>
-            
-            <div class="news-card">
-                <div class="news-title">SEBI Simplifies KYC Process for Investors</div>
-                <div class="news-meta">
-                    <span>05 Nov 2023</span>
-                    <span>Source: SEBI</span>
-                </div>
-                <div class="news-description">
-                    The Securities and Exchange Board of India has simplified the KYC registration process for investors. The new system allows for instant in-person verification through video calls and reduces documentation requirements for small investors.
-                </div>
-                <button class="btn" style="padding: 8px 16px; font-size: 0.9rem;">Read More</button>
+            <div id="news-container">
+                <!-- News will be loaded from Firestore -->
             </div>
         </div>
         
@@ -1544,52 +1522,36 @@
         const bottomNavbar = document.getElementById('bottom-navbar');
         const playLearnTabs = document.querySelectorAll('.play-learn-tab');
         const subsections = document.querySelectorAll('.subsection');
-        const markCompleteBtns = document.querySelectorAll('.mark-complete');
-        const quizOptions = document.querySelectorAll('.quiz-option');
-        const submitQuizBtns = document.querySelectorAll('.submit-quiz');
         const logoutBtn = document.getElementById('logout-btn');
+        const dashboardLogoutBtn = document.getElementById('dashboard-logout-btn');
         const forgotPasswordLink = document.getElementById('forgot-password-link');
+        const themeToggle = document.getElementById('theme-toggle');
+        const coursesContainer = document.getElementById('courses-container');
+        const quizzesContainer = document.getElementById('quizzes-container');
+        const newsContainer = document.getElementById('news-container');
 
-        // Initialize default users in Firebase (run once)
-        async function initializeDefaultUsers() {
-            const defaultUsers = [
-                { email: "harsheel@wiselyfin", password: "harsheel", name: "Harsheel", role: "admin" },
-                { email: "parth@wiselyfin", password: "parth", name: "Parth", role: "admin" },
-                { email: "anik@wiselyfin", password: "anik", name: "Anik", role: "admin" },
-                { email: "user@wiselyfin", password: "user", name: "User", role: "user" }
-            ];
+        // Theme Management
+        function initTheme() {
+            const savedTheme = localStorage.getItem('wiselyfin-theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeIcon(savedTheme);
+        }
 
-            for (const user of defaultUsers) {
-                try {
-                    // Check if user already exists
-                    const userCredential = await auth.createUserWithEmailAndPassword(user.email, user.password);
-                    
-                    // Create user document in Firestore
-                    await db.collection('users').doc(userCredential.user.uid).set({
-                        name: user.name,
-                        email: user.email,
-                        role: user.role,
-                        fincoins: 0,
-                        coursesCompleted: [],
-                        quizzesCompleted: [],
-                        transactions: [],
-                        state: "",
-                        age: "",
-                        joinDate: new Date().toISOString(),
-                        streak: 0
-                    });
-                    
-                    console.log(`Created user: ${user.name}`);
-                    
-                    // Sign out the created user
-                    await auth.signOut();
-                } catch (error) {
-                    if (error.code === 'auth/email-already-in-use') {
-                        console.log(`User ${user.email} already exists`);
-                    } else {
-                        console.error('Error creating user:', error);
-                    }
-                }
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('wiselyfin-theme', newTheme);
+            updateThemeIcon(newTheme);
+        }
+
+        function updateThemeIcon(theme) {
+            const icon = themeToggle.querySelector('i');
+            if (theme === 'dark') {
+                icon.className = 'fas fa-sun';
+            } else {
+                icon.className = 'fas fa-moon';
             }
         }
 
@@ -1601,7 +1563,7 @@
             document.getElementById(screenId).classList.add('active');
             
             // Show/hide bottom navbar
-            if (screenId === 'dashboard-screen' || screenId.includes('-screen') && screenId !== 'start-screen' && screenId !== 'auth-screen') {
+            if (screenId === 'dashboard-screen' || (screenId.includes('-screen') && screenId !== 'start-screen' && screenId !== 'auth-screen')) {
                 bottomNavbar.classList.add('visible');
             } else {
                 bottomNavbar.classList.remove('visible');
@@ -1617,21 +1579,22 @@
                 });
             }
 
-            // Update user data if logged in
-            if (currentUser && screenId === 'dashboard-screen') {
-                updateDashboard();
-            }
-            
-            if (currentUser && screenId === 'wallet-screen') {
-                updateWallet();
-            }
-            
-            if (currentUser && screenId === 'profile-screen') {
-                updateProfile();
-            }
-            
-            if (currentUser && screenId === 'leaderboard-screen') {
-                updateLeaderboard();
+            // Load data when screens are shown
+            if (currentUser) {
+                if (screenId === 'dashboard-screen') {
+                    updateDashboard();
+                } else if (screenId === 'play-learn-screen') {
+                    loadCourses();
+                    loadQuizzes();
+                } else if (screenId === 'wallet-screen') {
+                    updateWallet();
+                } else if (screenId === 'news-screen') {
+                    loadNews();
+                } else if (screenId === 'profile-screen') {
+                    updateProfile();
+                } else if (screenId === 'leaderboard-screen') {
+                    updateLeaderboard();
+                }
             }
         }
 
@@ -1742,6 +1705,126 @@
             }
         }
 
+        // Load courses from Firestore
+        async function loadCourses() {
+            try {
+                const coursesSnapshot = await db.collection('courses').get();
+                coursesContainer.innerHTML = '';
+
+                if (coursesSnapshot.empty) {
+                    coursesContainer.innerHTML = '<div class="content-section"><p>No courses available at the moment.</p></div>';
+                    return;
+                }
+
+                coursesSnapshot.forEach(doc => {
+                    const course = doc.data();
+                    const isCompleted = userData.coursesCompleted && userData.coursesCompleted.includes(course.id);
+                    
+                    const courseElement = document.createElement('div');
+                    courseElement.className = 'content-section';
+                    courseElement.innerHTML = `
+                        ${course.content}
+                        <button class="btn ${isCompleted ? 'btn-secondary' : 'btn-success'} mark-complete" 
+                                data-course="${course.id}" data-coins="${course.coins}"
+                                ${isCompleted ? 'disabled' : ''}>
+                            ${isCompleted ? 'Completed ✓' : `Mark as Completed (+${course.coins} FinCoins)`}
+                        </button>
+                    `;
+                    coursesContainer.appendChild(courseElement);
+                });
+
+                // Re-attach event listeners
+                document.querySelectorAll('.mark-complete').forEach(btn => {
+                    btn.addEventListener('click', handleCourseComplete);
+                });
+            } catch (error) {
+                console.error('Error loading courses:', error);
+                coursesContainer.innerHTML = '<div class="content-section"><p>Error loading courses. Please try again.</p></div>';
+            }
+        }
+
+        // Load quizzes from Firestore
+        async function loadQuizzes() {
+            try {
+                const quizzesSnapshot = await db.collection('quizzes').get();
+                quizzesContainer.innerHTML = '';
+
+                if (quizzesSnapshot.empty) {
+                    quizzesContainer.innerHTML = '<div class="quiz-container"><p>No quizzes available at the moment.</p></div>';
+                    return;
+                }
+
+                quizzesSnapshot.forEach(doc => {
+                    const quiz = doc.data();
+                    const isCompleted = userData.quizzesCompleted && userData.quizzesCompleted.includes(quiz.id);
+                    
+                    const quizElement = document.createElement('div');
+                    quizElement.className = 'quiz-container';
+                    quizElement.id = `quiz-${quiz.id}`;
+                    quizElement.innerHTML = `
+                        <div class="quiz-question">${quiz.question}</div>
+                        <div class="quiz-options">
+                            ${quiz.options.map((option, index) => `
+                                <div class="quiz-option" data-index="${index}">${option}</div>
+                            `).join('')}
+                        </div>
+                        <button class="btn submit-quiz" data-quiz="${quiz.id}" data-coins="${quiz.coins}"
+                                ${isCompleted ? 'disabled' : ''}>
+                            ${isCompleted ? 'Completed ✓' : 'Submit Answer'}
+                        </button>
+                        <div class="quiz-result"></div>
+                    `;
+                    quizzesContainer.appendChild(quizElement);
+                });
+
+                // Re-attach event listeners
+                document.querySelectorAll('.quiz-option').forEach(option => {
+                    option.addEventListener('click', handleQuizOptionSelect);
+                });
+
+                document.querySelectorAll('.submit-quiz').forEach(btn => {
+                    btn.addEventListener('click', handleQuizSubmit);
+                });
+            } catch (error) {
+                console.error('Error loading quizzes:', error);
+                quizzesContainer.innerHTML = '<div class="quiz-container"><p>Error loading quizzes. Please try again.</p></div>';
+            }
+        }
+
+        // Load news from Firestore
+        async function loadNews() {
+            try {
+                const newsSnapshot = await db.collection('news').orderBy('date', 'desc').get();
+                newsContainer.innerHTML = '';
+
+                if (newsSnapshot.empty) {
+                    newsContainer.innerHTML = '<div class="news-card"><p>No news available at the moment.</p></div>';
+                    return;
+                }
+
+                newsSnapshot.forEach(doc => {
+                    const newsItem = doc.data();
+                    const newsElement = document.createElement('div');
+                    newsElement.className = 'news-card';
+                    newsElement.innerHTML = `
+                        <div class="news-title">${newsItem.title}</div>
+                        <div class="news-meta">
+                            <span>${new Date(newsItem.date).toLocaleDateString()}</span>
+                            <span>Source: ${newsItem.source}</span>
+                        </div>
+                        <div class="news-description">
+                            ${newsItem.description}
+                        </div>
+                        <button class="btn read-more-btn" style="padding: 8px 16px; font-size: 0.9rem;">Read More</button>
+                    `;
+                    newsContainer.appendChild(newsElement);
+                });
+            } catch (error) {
+                console.error('Error loading news:', error);
+                newsContainer.innerHTML = '<div class="news-card"><p>Error loading news. Please try again.</p></div>';
+            }
+        }
+
         // Add coins to user
         async function addCoins(amount, task) {
             try {
@@ -1784,19 +1867,19 @@
         }
 
         // Mark course as completed
-        async function completeCourse(topic, coins) {
+        async function completeCourse(courseId, coins) {
             try {
                 if (!userData.coursesCompleted) {
                     userData.coursesCompleted = [];
                 }
                 
                 // Check if already completed
-                if (userData.coursesCompleted.includes(topic)) {
+                if (userData.coursesCompleted.includes(courseId)) {
                     return false;
                 }
                 
                 // Add to completed courses
-                userData.coursesCompleted.push(topic);
+                userData.coursesCompleted.push(courseId);
                 
                 // Update Firestore
                 await db.collection('users').doc(currentUser.uid).update({
@@ -1804,7 +1887,7 @@
                 });
                 
                 // Add coins
-                await addCoins(coins, `Completed ${topic.toUpperCase()} Course`);
+                await addCoins(coins, `Completed ${courseId.toUpperCase()} Course`);
                 
                 // Update profile
                 updateProfile();
@@ -1849,98 +1932,45 @@
             }
         }
 
-        // Switch between auth tabs
-        authTabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                const tabName = tab.getAttribute('data-tab');
-                
-                authTabs.forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                
-                authForms.forEach(form => {
-                    form.classList.remove('active');
-                    if (form.id === `${tabName}-form`) {
-                        form.classList.add('active');
-                    }
-                });
-                
-                // Clear messages
-                loginError.style.display = 'none';
-                signupError.style.display = 'none';
-                signupSuccess.style.display = 'none';
-            });
-        });
+        // Event handlers
+        function handleCourseComplete() {
+            const courseId = this.getAttribute('data-course');
+            const coins = parseInt(this.getAttribute('data-coins'));
+            completeCourse(courseId, coins);
+        }
 
-        // Switch between play/learn subsections
-        playLearnTabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                const subsection = tab.getAttribute('data-subsection');
-                
-                playLearnTabs.forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                
-                subsections.forEach(sub => {
-                    sub.classList.remove('active');
-                    if (sub.id === `${subsection}-subsection`) {
-                        sub.classList.add('active');
-                    }
-                });
+        function handleQuizOptionSelect() {
+            const parentQuiz = this.closest('.quiz-container');
+            parentQuiz.querySelectorAll('.quiz-option').forEach(opt => {
+                opt.classList.remove('selected');
             });
-        });
+            this.classList.add('selected');
+        }
 
-        // Mark course as complete
-        markCompleteBtns.forEach(btn => {
-            btn.addEventListener('click', async function() {
-                const topic = this.getAttribute('data-topic');
-                const coins = parseInt(this.getAttribute('data-coins'));
+        async function handleQuizSubmit() {
+            const quizId = parseInt(this.getAttribute('data-quiz'));
+            const coins = parseInt(this.getAttribute('data-coins'));
+            const quizContainer = document.getElementById(`quiz-${quizId}`);
+            const selectedOption = quizContainer.querySelector('.quiz-option.selected');
+            const resultDiv = quizContainer.querySelector('.quiz-result');
+            
+            if (!selectedOption) {
+                alert('Please select an answer!');
+                return;
+            }
+            
+            try {
+                // Get the quiz data to check correct answer
+                const quizDoc = await db.collection('quizzes').doc(quizId.toString()).get();
+                const quiz = quizDoc.data();
                 
-                const success = await completeCourse(topic, coins);
-                
-                if (success) {
-                    this.textContent = 'Completed ✓';
-                    this.disabled = true;
-                    this.classList.remove('btn-success');
-                } else {
-                    alert('Error completing course. Please try again.');
-                }
-            });
-        });
-
-        // Quiz option selection
-        quizOptions.forEach(option => {
-            option.addEventListener('click', function() {
-                // Remove selection from other options in the same quiz
-                const parentQuiz = this.closest('.quiz-container');
-                parentQuiz.querySelectorAll('.quiz-option').forEach(opt => {
-                    opt.classList.remove('selected');
-                });
-                
-                // Select this option
-                this.classList.add('selected');
-            });
-        });
-
-        // Submit quiz answer
-        submitQuizBtns.forEach(btn => {
-            btn.addEventListener('click', async function() {
-                const quizId = this.getAttribute('data-quiz');
-                const coins = parseInt(this.getAttribute('data-coins'));
-                const quizContainer = document.getElementById(`quiz-${quizId}`);
-                const selectedOption = quizContainer.querySelector('.quiz-option.selected');
-                const resultDiv = quizContainer.querySelector('.quiz-result');
-                
-                if (!selectedOption) {
-                    alert('Please select an answer!');
-                    return;
-                }
-                
-                const isCorrect = selectedOption.getAttribute('data-correct') === 'true';
+                const isCorrect = parseInt(selectedOption.getAttribute('data-index')) === quiz.correctAnswer;
                 
                 if (isCorrect) {
                     resultDiv.textContent = 'Correct! Well done.';
                     resultDiv.className = 'quiz-result correct';
                     
-                    const success = await completeQuiz(parseInt(quizId), coins);
+                    const success = await completeQuiz(quizId, coins);
                     
                     if (success) {
                         this.disabled = true;
@@ -1952,8 +1982,241 @@
                 }
                 
                 resultDiv.style.display = 'block';
-            });
-        });
+            } catch (error) {
+                console.error('Error submitting quiz:', error);
+                resultDiv.textContent = 'Error submitting quiz. Please try again.';
+                resultDiv.className = 'quiz-result incorrect';
+                resultDiv.style.display = 'block';
+            }
+        }
+
+        // Initialize default users in Firebase (run once)
+        async function initializeDefaultUsers() {
+            const defaultUsers = [
+                { email: "harsheel@wiselyfin", password: "harsheel", name: "Harsheel", role: "admin" },
+                { email: "parth@wiselyfin", password: "parth", name: "Parth", role: "admin" },
+                { email: "anik@wiselyfin", password: "anik", name: "Anik", role: "admin" },
+                { email: "user@wiselyfin", password: "user", name: "User", role: "user" }
+            ];
+
+            for (const user of defaultUsers) {
+                try {
+                    // Check if user already exists
+                    const userCredential = await auth.createUserWithEmailAndPassword(user.email, user.password);
+                    
+                    // Create user document in Firestore
+                    await db.collection('users').doc(userCredential.user.uid).set({
+                        name: user.name,
+                        email: user.email,
+                        role: user.role,
+                        fincoins: 0,
+                        coursesCompleted: [],
+                        quizzesCompleted: [],
+                        transactions: [],
+                        state: "",
+                        age: "",
+                        joinDate: new Date().toISOString(),
+                        streak: 0
+                    });
+                    
+                    console.log(`Created user: ${user.name}`);
+                    
+                    // Sign out the created user
+                    await auth.signOut();
+                } catch (error) {
+                    if (error.code === 'auth/email-already-in-use') {
+                        console.log(`User ${user.email} already exists`);
+                    } else {
+                        console.error('Error creating user:', error);
+                    }
+                }
+            }
+        }
+
+        // Initialize default data in Firebase (run once)
+        async function initializeDefaultData() {
+            // Initialize quizzes
+            const quizzes = [
+                {
+                    id: 1,
+                    question: "What does UPI stand for in banking?",
+                    options: [
+                        "Unified Payments Interface",
+                        "Universal Payment Integration", 
+                        "United Payment Institution",
+                        "Unified Personal Investment"
+                    ],
+                    correctAnswer: 0,
+                    coins: 10,
+                    category: "Digital Payments"
+                },
+                {
+                    id: 2,
+                    question: "Which of these is NOT a benefit of budgeting?",
+                    options: [
+                        "Helps achieve financial goals",
+                        "Reduces financial stress",
+                        "Guarantees wealth accumulation",
+                        "Provides spending control"
+                    ],
+                    correctAnswer: 2,
+                    coins: 10,
+                    category: "Budgeting"
+                },
+                {
+                    id: 3,
+                    question: "According to the 50/30/20 rule, what percentage should go to savings?",
+                    options: ["10%", "15%", "20%", "30%"],
+                    correctAnswer: 2,
+                    coins: 10,
+                    category: "Budgeting"
+                },
+                {
+                    id: 4,
+                    question: "What is the most important practice for digital financial safety?",
+                    options: [
+                        "Using the same password for all accounts",
+                        "Sharing passwords with family members",
+                        "Enabling two-factor authentication",
+                        "Using public Wi-Fi for transactions"
+                    ],
+                    correctAnswer: 2,
+                    coins: 10,
+                    category: "Security"
+                }
+            ];
+
+            // Initialize courses
+            const courses = [
+                {
+                    id: "upi",
+                    title: "Understanding UPI",
+                    description: "Learn about Unified Payments Interface and how it works",
+                    content: `
+                        <h2>Understanding UPI</h2>
+                        <p>Unified Payments Interface (UPI) is an instant real-time payment system developed by National Payments Corporation of India (NPCI). The interface facilitates inter-bank peer-to-peer (P2P) and person-to-merchant (P2M) transactions.</p>
+                        
+                        <h3>How UPI Works</h3>
+                        <p>UPI uses a single mobile application for accessing different bank accounts. It works by creating a unique Virtual Payment Address (VPA) for each user, eliminating the need to share bank details.</p>
+                        
+                        <h3>Key Benefits</h3>
+                        <ul>
+                            <li>Instant money transfer 24/7</li>
+                            <li>Single mobile app for multiple bank accounts</li>
+                            <li>No need to enter bank details</li>
+                            <li>Secure with two-factor authentication</li>
+                            <li>Supports both P2P and merchant payments</li>
+                        </ul>
+                    `,
+                    coins: 5,
+                    duration: "10 min",
+                    category: "Digital Payments"
+                },
+                {
+                    id: "budgeting",
+                    title: "Budgeting Basics",
+                    description: "Learn how to create and manage your personal budget",
+                    content: `
+                        <h2>Budgeting Basics</h2>
+                        <p>Budgeting is the process of creating a plan to spend your money. This spending plan is called a budget. Creating this spending plan allows you to determine in advance whether you will have enough money to do the things you need to do or would like to do.</p>
+                        
+                        <h3>Steps to Create a Budget</h3>
+                        <ol>
+                            <li>Calculate your net income</li>
+                            <li>Track your spending</li>
+                            <li>Set realistic goals</li>
+                            <li>Make a plan</li>
+                            <li>Adjust your spending to stay on budget</li>
+                            <li>Review your budget regularly</li>
+                        </ol>
+                        
+                        <h3>50/30/20 Rule</h3>
+                        <p>A popular budgeting method is the 50/30/20 rule:</p>
+                        <ul>
+                            <li><strong>50%</strong> for needs (rent, groceries, utilities)</li>
+                            <li><strong>30%</strong> for wants (entertainment, dining out)</li>
+                            <li><strong>20%</strong> for savings and debt repayment</li>
+                        </ul>
+                    `,
+                    coins: 5,
+                    duration: "15 min",
+                    category: "Personal Finance"
+                },
+                {
+                    id: "security",
+                    title: "Digital Safety & Security",
+                    description: "Protect your financial information online",
+                    content: `
+                        <h2>Digital Safety & Security</h2>
+                        <p>In today's digital age, protecting your financial information online is crucial. Learn how to safeguard your accounts and personal data from cyber threats.</p>
+                        
+                        <h3>Essential Security Practices</h3>
+                        <ul>
+                            <li>Use strong, unique passwords for each account</li>
+                            <li>Enable two-factor authentication</li>
+                            <li>Be cautious of phishing emails and messages</li>
+                            <li>Keep your software and apps updated</li>
+                            <li>Use secure networks for financial transactions</li>
+                        </ul>
+                    `,
+                    coins: 5,
+                    duration: "12 min",
+                    category: "Security"
+                }
+            ];
+
+            // Initialize news
+            const news = [
+                {
+                    id: 1,
+                    title: "RBI Issues New Guidelines for Digital Lending",
+                    description: "The Reserve Bank of India has issued comprehensive guidelines for digital lending to enhance transparency and customer protection.",
+                    content: "The new framework mandates direct disbursement of loans to borrowers' accounts and prohibits automatic increase in credit limits.",
+                    date: "2023-11-15",
+                    source: "RBI",
+                    category: "Regulation"
+                },
+                {
+                    id: 2,
+                    title: "UPI Transactions Cross 10 Billion Mark Monthly",
+                    description: "Unified Payments Interface transactions have shown massive growth with 10 billion monthly transactions.",
+                    content: "NPCI is planning to introduce new features including UPI Lite for smaller transactions and credit card linking.",
+                    date: "2023-11-10",
+                    source: "NPCI",
+                    category: "Digital Payments"
+                },
+                {
+                    id: 3,
+                    title: "SEBI Simplifies KYC Process for Investors",
+                    description: "The Securities and Exchange Board of India has simplified the KYC registration process.",
+                    content: "The new system allows for instant in-person verification through video calls and reduces documentation requirements.",
+                    date: "2023-11-05",
+                    source: "SEBI",
+                    category: "Investment"
+                }
+            ];
+
+            try {
+                // Add quizzes to Firestore
+                for (const quiz of quizzes) {
+                    await db.collection('quizzes').doc(quiz.id.toString()).set(quiz);
+                }
+
+                // Add courses to Firestore
+                for (const course of courses) {
+                    await db.collection('courses').doc(course.id).set(course);
+                }
+
+                // Add news to Firestore
+                for (const newsItem of news) {
+                    await db.collection('news').doc(newsItem.id.toString()).set(newsItem);
+                }
+
+                console.log('Default data initialized successfully');
+            } catch (error) {
+                console.error('Error initializing default data:', error);
+            }
+        }
 
         // Event Listeners
         getStartedBtn.addEventListener('click', () => {
@@ -2136,6 +2399,17 @@
             }
         });
 
+        dashboardLogoutBtn.addEventListener('click', async () => {
+            try {
+                await auth.signOut();
+                currentUser = null;
+                userData = null;
+                showScreen('start-screen');
+            } catch (error) {
+                console.error('Logout error:', error);
+            }
+        });
+
         // Auth state observer
         auth.onAuthStateChanged(async (user) => {
             if (user) {
@@ -2172,13 +2446,61 @@
             }
         });
 
+        // Auth tabs
+        authTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabName = tab.getAttribute('data-tab');
+                
+                authTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                authForms.forEach(form => {
+                    form.classList.remove('active');
+                    if (form.id === `${tabName}-form`) {
+                        form.classList.add('active');
+                    }
+                });
+                
+                // Clear messages
+                loginError.style.display = 'none';
+                signupError.style.display = 'none';
+                signupSuccess.style.display = 'none';
+            });
+        });
+
+        // Play & Learn tabs
+        playLearnTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const subsection = tab.getAttribute('data-subsection');
+                
+                playLearnTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                subsections.forEach(sub => {
+                    sub.classList.remove('active');
+                    if (sub.id === `${subsection}-subsection`) {
+                        sub.classList.add('active');
+                    }
+                });
+            });
+        });
+
+        // Initialize the app
+        initTheme();
+        
+        // Uncomment the line below to initialize default data (run once)
+        // initializeDefaultData();
+        // initializeDefaultUsers();
+
+        // Theme toggle event
+        themeToggle.addEventListener('click', toggleTheme);
+
         // Add animation delays to tab cards
         tabCards.forEach((card, index) => {
             card.style.animationDelay = `${index * 0.1}s`;
         });
 
-        // Initialize default users on first load (comment this out after first run)
-       // initializeDefaultUsers();
+        console.log('WiselyFin app initialized successfully!');
     </script>
 </body>
 </html>
