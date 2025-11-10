@@ -1503,6 +1503,7 @@
 
     <script>
         // Firebase Configuration
+// Firebase Configuration
 const firebaseConfig = {
     apiKey: "AIzaSyAH6a-5noZFdYmrH73tmLmoQBowD_onxf4",
     authDomain: "wiselyfin.firebaseapp.com",
@@ -1747,6 +1748,7 @@ async function loadLessons() {
             
             const lessonElement = document.createElement('div');
             lessonElement.className = 'lesson-card';
+            lessonElement.id = `lesson-${lesson.id}`;
             lessonElement.innerHTML = `
                 <div class="lesson-header">
                     <div class="lesson-title">${lesson.title}</div>
@@ -1977,10 +1979,53 @@ async function completeQuiz(quizId, coins) {
 }
 
 // Event handlers
-function handleLessonComplete() {
+async function handleLessonComplete() {
     const lessonId = this.getAttribute('data-lesson');
     const coins = parseInt(this.getAttribute('data-coins'));
-    completeLesson(lessonId, coins);
+    
+    // Show loading state
+    this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Completing...';
+    this.disabled = true;
+    
+    try {
+        const success = await completeLesson(lessonId, coins);
+        
+        if (success) {
+            // Update the button immediately
+            this.innerHTML = 'Completed ✓';
+            this.classList.remove('btn-success');
+            this.classList.add('btn-secondary');
+            
+            // Show success message
+            const lessonCard = document.getElementById(`lesson-${lessonId}`);
+            const successMessage = document.createElement('div');
+            successMessage.className = 'lesson-success';
+            successMessage.innerHTML = `
+                <div style="background: rgba(40, 167, 69, 0.1); color: var(--success); padding: 10px; border-radius: 8px; margin-top: 10px; text-align: center;">
+                    <i class="fas fa-check-circle"></i> Lesson completed! +${coins} FinCoins earned!
+                </div>
+            `;
+            lessonCard.appendChild(successMessage);
+            
+            // Remove success message after 3 seconds
+            setTimeout(() => {
+                successMessage.remove();
+            }, 3000);
+            
+            console.log(`Lesson ${lessonId} marked as completed`);
+        } else {
+            // Reset button if failed
+            this.innerHTML = 'Mark as Completed';
+            this.disabled = false;
+            alert('Failed to mark lesson as completed. Please try again.');
+        }
+    } catch (error) {
+        console.error('Error handling lesson completion:', error);
+        // Reset button on error
+        this.innerHTML = 'Mark as Completed';
+        this.disabled = false;
+        alert('Error completing lesson. Please try again.');
+    }
 }
 
 function handleQuizOptionSelect() {
@@ -2003,6 +2048,10 @@ async function handleQuizSubmit() {
         return;
     }
     
+    // Show loading state
+    this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking...';
+    this.disabled = true;
+    
     try {
         // Get the quiz data to check correct answer
         const quizDoc = await db.collection('quizzes').doc(quizId).get();
@@ -2019,10 +2068,21 @@ async function handleQuizSubmit() {
             if (success) {
                 this.disabled = true;
                 this.textContent = 'Completed ✓';
+                this.classList.remove('btn-success');
+                this.classList.add('btn-secondary');
+                
+                // Add success message with coin reward
+                const coinMessage = document.createElement('div');
+                coinMessage.style.cssText = 'background: rgba(255, 215, 0, 0.1); color: var(--gold); padding: 8px; border-radius: 5px; margin-top: 10px; text-align: center; font-weight: 600;';
+                coinMessage.innerHTML = `<i class="fas fa-coins"></i> +${coins} FinCoins earned!`;
+                resultDiv.appendChild(coinMessage);
             }
         } else {
             resultDiv.textContent = 'Incorrect. Try again!';
             resultDiv.className = 'quiz-result incorrect';
+            // Reset button for retry
+            this.innerHTML = 'Submit Answer';
+            this.disabled = false;
         }
         
         resultDiv.style.display = 'block';
@@ -2031,6 +2091,9 @@ async function handleQuizSubmit() {
         resultDiv.textContent = 'Error submitting quiz. Please try again.';
         resultDiv.className = 'quiz-result incorrect';
         resultDiv.style.display = 'block';
+        // Reset button on error
+        this.innerHTML = 'Submit Answer';
+        this.disabled = false;
     }
 }
 
