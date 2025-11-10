@@ -498,158 +498,135 @@
             color: var(--text-dark);
         }
 
-        /* Play & Learn Section */
-        .play-learn-tabs {
+        /* Play & Learn Selection Screen */
+        .selection-screen {
             display: flex;
-            margin-bottom: 20px;
-            background: var(--card-bg);
-            border-radius: 50px;
-            padding: 5px;
-            box-shadow: var(--card-shadow);
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: var(--background);
         }
 
-        .play-learn-tab {
-            flex: 1;
+        .selection-container {
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .selection-title {
             text-align: center;
-            padding: 12px;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: var(--transition);
-            font-weight: 500;
+            margin-bottom: 40px;
+            font-size: 2rem;
+            font-weight: 700;
             color: var(--text-dark);
         }
 
-        .play-learn-tab.active {
-            background: var(--primary-blue);
-            color: white;
-        }
-
-        .topic-grid {
+        .selection-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
         }
 
-        .topic-card {
+        .selection-card {
             background: var(--card-bg);
-            border-radius: 15px;
-            overflow: hidden;
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
             box-shadow: var(--card-shadow);
             transition: var(--transition);
+            cursor: pointer;
             animation: fadeIn 0.5s ease;
         }
 
-        .topic-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        .selection-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
         }
 
-        .topic-thumbnail {
-            height: 150px;
-            background: linear-gradient(135deg, var(--primary-blue), #0056cc);
-            position: relative;
-            overflow: hidden;
+        .selection-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            background: var(--primary-blue);
             display: flex;
             align-items: center;
             justify-content: center;
+            margin: 0 auto 20px;
             color: white;
-            font-size: 3rem;
+            font-size: 2rem;
         }
 
-        .topic-title {
-            padding: 15px;
+        .selection-card.learn .selection-icon {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+        }
+
+        .selection-card.play .selection-icon {
+            background: linear-gradient(135deg, #FF9800, #F57C00);
+        }
+
+        .selection-card h3 {
+            font-size: 1.5rem;
             font-weight: 600;
+            margin-bottom: 15px;
             color: var(--text-dark);
         }
 
-        .topic-progress {
-            padding: 0 15px 15px;
+        .selection-card p {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.6;
         }
 
-        .progress-bar {
-            height: 6px;
-            background: #eee;
-            border-radius: 3px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: var(--primary-blue);
-            border-radius: 3px;
-            transition: width 0.5s ease;
-        }
-
-        .quiz-card {
+        /* Lesson Card */
+        .lesson-card {
             background: var(--card-bg);
             border-radius: 15px;
             padding: 20px;
+            margin-bottom: 20px;
             box-shadow: var(--card-shadow);
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
             transition: var(--transition);
             animation: fadeIn 0.5s ease;
         }
 
-        .quiz-card:hover {
+        .lesson-card:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
         }
 
-        .quiz-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
-            background: var(--gold);
+        .lesson-header {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            margin-right: 15px;
-            color: white;
-            font-size: 1.5rem;
-        }
-
-        .quiz-content {
-            flex: 1;
-        }
-
-        .quiz-reward {
-            display: flex;
-            align-items: center;
-            color: var(--gold);
-            font-weight: 600;
-        }
-
-        /* Content Section */
-        .content-section {
-            background: var(--card-bg);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: var(--card-shadow);
-            animation: fadeIn 0.5s ease;
-        }
-
-        .content-section h2 {
             margin-bottom: 15px;
-            color: var(--primary-blue);
         }
 
-        .content-section p {
+        .lesson-title {
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: var(--text-dark);
+        }
+
+        .lesson-meta {
+            display: flex;
+            gap: 10px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .lesson-content {
             margin-bottom: 15px;
             line-height: 1.6;
             color: var(--text-dark);
         }
 
-        .content-section ul {
-            margin-left: 20px;
-            margin-bottom: 15px;
+        .lesson-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .content-section li {
-            margin-bottom: 8px;
-            color: var(--text-dark);
+        .lesson-coins {
+            color: var(--gold);
+            font-weight: 600;
         }
 
         /* Quiz Section */
@@ -1019,59 +996,6 @@
             font-size: 0.9rem;
         }
 
-        /* Lesson Card */
-        .lesson-card {
-            background: var(--card-bg);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: var(--card-shadow);
-            transition: var(--transition);
-            animation: fadeIn 0.5s ease;
-        }
-
-        .lesson-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .lesson-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .lesson-title {
-            font-weight: 600;
-            font-size: 1.2rem;
-            color: var(--text-dark);
-        }
-
-        .lesson-meta {
-            display: flex;
-            gap: 10px;
-            color: #666;
-            font-size: 0.9rem;
-        }
-
-        .lesson-content {
-            margin-bottom: 15px;
-            line-height: 1.6;
-            color: var(--text-dark);
-        }
-
-        .lesson-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .lesson-coins {
-            color: var(--gold);
-            font-weight: 600;
-        }
-
         /* Animations */
         @keyframes float {
             0%, 100% { transform: translateY(0); }
@@ -1112,10 +1036,6 @@
                 font-size: 2.5rem;
             }
             
-            .topic-grid {
-                grid-template-columns: 1fr;
-            }
-            
             .team-grid {
                 grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
             }
@@ -1135,6 +1055,14 @@
             .greeting {
                 margin-right: 0;
                 margin-bottom: 15px;
+            }
+
+            .selection-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .selection-card {
+                padding: 30px 20px;
             }
         }
 
@@ -1157,6 +1085,10 @@
             
             .balance-amount {
                 font-size: 2rem;
+            }
+
+            .selection-title {
+                font-size: 1.5rem;
             }
         }
     </style>
@@ -1321,28 +1253,58 @@
         
         <!-- Section Screens -->
         
-        <!-- Play & Learn Section -->
-        <div class="screen section-screen" id="play-learn-screen">
+        <!-- Play & Learn Selection Screen -->
+        <div class="screen selection-screen" id="play-learn-selection-screen">
             <div class="section-header">
                 <div class="back-btn"><i class="fas fa-arrow-left"></i></div>
                 <h2 class="section-title">Play & Learn</h2>
             </div>
             
-            <div class="play-learn-tabs">
-                <div class="play-learn-tab active" data-subsection="learn">Learn</div>
-                <div class="play-learn-tab" data-subsection="play">Play</div>
-            </div>
-            
-            <div class="subsection active" id="learn-subsection">
-                <div id="lessons-container">
-                    <!-- Lessons will be loaded from Firestore -->
+            <div class="selection-container">
+                <h2 class="selection-title">Choose Your Learning Path</h2>
+                <div class="selection-grid">
+                    <div class="selection-card learn" data-section="learn">
+                        <div class="selection-icon">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <h3>Learn</h3>
+                        <p>Explore comprehensive financial lessons and build your knowledge step by step. Master personal finance concepts through structured learning.</p>
+                        <button class="btn">Start Learning</button>
+                    </div>
+                    
+                    <div class="selection-card play" data-section="play">
+                        <div class="selection-icon">
+                            <i class="fas fa-gamepad"></i>
+                        </div>
+                        <h3>Play</h3>
+                        <p>Test your knowledge with interactive quizzes and challenges. Earn FinCoins while having fun and reinforcing what you've learned.</p>
+                        <button class="btn">Start Playing</button>
+                    </div>
                 </div>
             </div>
+        </div>
+        
+        <!-- Lessons Section -->
+        <div class="screen section-screen" id="lessons-screen">
+            <div class="section-header">
+                <div class="back-btn"><i class="fas fa-arrow-left"></i></div>
+                <h2 class="section-title">Financial Lessons</h2>
+            </div>
             
-            <div class="subsection" id="play-subsection">
-                <div id="quizzes-container">
-                    <!-- Quizzes will be loaded from Firestore -->
-                </div>
+            <div id="lessons-container">
+                <!-- Lessons will be loaded from Firestore -->
+            </div>
+        </div>
+        
+        <!-- Quizzes Section -->
+        <div class="screen section-screen" id="quizzes-screen">
+            <div class="section-header">
+                <div class="back-btn"><i class="fas fa-arrow-left"></i></div>
+                <h2 class="section-title">Financial Quizzes</h2>
+            </div>
+            
+            <div id="quizzes-container">
+                <!-- Quizzes will be loaded from Firestore -->
             </div>
         </div>
         
@@ -1565,6 +1527,7 @@
         const startScreen = document.getElementById('start-screen');
         const authScreen = document.getElementById('auth-screen');
         const dashboardScreen = document.getElementById('dashboard-screen');
+        const playLearnSelectionScreen = document.getElementById('play-learn-selection-screen');
         const getStartedBtn = document.getElementById('get-started-btn');
         const authTabs = document.querySelectorAll('.auth-tab');
         const authForms = document.querySelectorAll('.auth-form');
@@ -1577,8 +1540,6 @@
         const backBtns = document.querySelectorAll('.back-btn');
         const navItems = document.querySelectorAll('.nav-item');
         const bottomNavbar = document.getElementById('bottom-navbar');
-        const playLearnTabs = document.querySelectorAll('.play-learn-tab');
-        const subsections = document.querySelectorAll('.subsection');
         const logoutBtn = document.getElementById('logout-btn');
         const dashboardLogoutBtn = document.getElementById('dashboard-logout-btn');
         const forgotPasswordLink = document.getElementById('forgot-password-link');
@@ -1586,6 +1547,7 @@
         const lessonsContainer = document.getElementById('lessons-container');
         const quizzesContainer = document.getElementById('quizzes-container');
         const newsContainer = document.getElementById('news-container');
+        const selectionCards = document.querySelectorAll('.selection-card');
 
         // Theme Management
         function initTheme() {
@@ -1620,14 +1582,14 @@
             document.getElementById(screenId).classList.add('active');
             
             // Show/hide bottom navbar
-            if (screenId === 'dashboard-screen' || (screenId.includes('-screen') && screenId !== 'start-screen' && screenId !== 'auth-screen')) {
+            if (screenId === 'dashboard-screen' || (screenId.includes('-screen') && screenId !== 'start-screen' && screenId !== 'auth-screen' && screenId !== 'play-learn-selection-screen')) {
                 bottomNavbar.classList.add('visible');
             } else {
                 bottomNavbar.classList.remove('visible');
             }
             
             // Update bottom nav active state
-            if (screenId !== 'start-screen' && screenId !== 'auth-screen') {
+            if (screenId !== 'start-screen' && screenId !== 'auth-screen' && screenId !== 'play-learn-selection-screen') {
                 navItems.forEach(item => {
                     item.classList.remove('active');
                     if (item.getAttribute('data-screen') === screenId.replace('-screen', '')) {
@@ -1640,8 +1602,9 @@
             if (currentUser) {
                 if (screenId === 'dashboard-screen') {
                     updateDashboard();
-                } else if (screenId === 'play-learn-screen') {
+                } else if (screenId === 'lessons-screen') {
                     loadLessons();
+                } else if (screenId === 'quizzes-screen') {
                     loadQuizzes();
                 } else if (screenId === 'wallet-screen') {
                     updateWallet();
@@ -1765,16 +1728,21 @@
         // Load lessons from Firestore
         async function loadLessons() {
             try {
+                console.log("Loading lessons...");
                 const lessonsSnapshot = await db.collection('lessons').orderBy('order', 'asc').get();
                 lessonsContainer.innerHTML = '';
 
                 if (lessonsSnapshot.empty) {
                     lessonsContainer.innerHTML = '<div class="lesson-card"><p>No lessons available at the moment.</p></div>';
+                    console.log("No lessons found in database");
                     return;
                 }
 
+                console.log(`Found ${lessonsSnapshot.size} lessons`);
+                
                 lessonsSnapshot.forEach(doc => {
                     const lesson = doc.data();
+                    console.log('Processing lesson:', lesson.title);
                     const isCompleted = userData.lessonsCompleted && userData.lessonsCompleted.includes(lesson.id);
                     
                     const lessonElement = document.createElement('div');
@@ -1806,6 +1774,7 @@
                 document.querySelectorAll('.mark-complete').forEach(btn => {
                     btn.addEventListener('click', handleLessonComplete);
                 });
+                
             } catch (error) {
                 console.error('Error loading lessons:', error);
                 lessonsContainer.innerHTML = '<div class="lesson-card"><p>Error loading lessons. Please try again.</p></div>';
@@ -1815,16 +1784,21 @@
         // Load quizzes from Firestore
         async function loadQuizzes() {
             try {
+                console.log("Loading quizzes...");
                 const quizzesSnapshot = await db.collection('quizzes').orderBy('order', 'asc').get();
                 quizzesContainer.innerHTML = '';
 
                 if (quizzesSnapshot.empty) {
                     quizzesContainer.innerHTML = '<div class="quiz-container"><p>No quizzes available at the moment.</p></div>';
+                    console.log("No quizzes found in database");
                     return;
                 }
 
+                console.log(`Found ${quizzesSnapshot.size} quizzes`);
+                
                 quizzesSnapshot.forEach(doc => {
                     const quiz = doc.data();
+                    console.log('Processing quiz:', quiz.question);
                     const isCompleted = userData.quizzesCompleted && userData.quizzesCompleted.includes(quiz.id);
                     
                     const quizElement = document.createElement('div');
@@ -1854,6 +1828,7 @@
                 document.querySelectorAll('.submit-quiz').forEach(btn => {
                     btn.addEventListener('click', handleQuizSubmit);
                 });
+                
             } catch (error) {
                 console.error('Error loading quizzes:', error);
                 quizzesContainer.innerHTML = '<div class="quiz-container"><p>Error loading quizzes. Please try again.</p></div>';
@@ -2059,310 +2034,6 @@
             }
         }
 
-        // Initialize default users in Firebase
-        async function initializeDefaultUsers() {
-            const defaultUsers = [
-                { email: "harsheel@wiselyfin", password: "harsheel", name: "Harsheel", role: "admin" },
-                { email: "parth@wiselyfin", password: "parth", name: "Parth", role: "admin" },
-                { email: "anik@wiselyfin", password: "anik", name: "Anik", role: "admin" },
-                { email: "user@wiselyfin", password: "user", name: "User", role: "user" }
-            ];
-
-            for (const user of defaultUsers) {
-                try {
-                    // Check if user already exists
-                    const userCredential = await auth.createUserWithEmailAndPassword(user.email, user.password);
-                    
-                    // Create user document in Firestore
-                    await db.collection('users').doc(userCredential.user.uid).set({
-                        name: user.name,
-                        email: user.email,
-                        role: user.role,
-                        fincoins: 0,
-                        lessonsCompleted: [],
-                        quizzesCompleted: [],
-                        transactions: [],
-                        state: "",
-                        age: "",
-                        joinDate: new Date().toISOString(),
-                        streak: 0
-                    });
-                    
-                    console.log(`Created user: ${user.name}`);
-                    
-                    // Sign out the created user
-                    await auth.signOut();
-                } catch (error) {
-                    if (error.code === 'auth/email-already-in-use') {
-                        console.log(`User ${user.email} already exists`);
-                    } else {
-                        console.error('Error creating user:', error);
-                    }
-                }
-            }
-        }
-
-        // Initialize default data in Firebase
-        async function initializeDefaultData() {
-            // 50 Comprehensive Financial Lessons
-            const lessons = [
-                {
-                    id: "intro_to_finance",
-                    title: "Introduction to Personal Finance",
-                    description: "Understanding the basics of managing your money",
-                    content: `
-                        <h2>Introduction to Personal Finance</h2>
-                        <p>Personal finance is the process of planning and managing your money to achieve personal economic satisfaction. It involves budgeting, saving, investing, and protecting your assets.</p>
-                        
-                        <h3>Key Areas of Personal Finance</h3>
-                        <ul>
-                            <li><strong>Income:</strong> Money you earn from work, investments, or other sources</li>
-                            <li><strong>Spending:</strong> Money used for expenses and purchases</li>
-                            <li><strong>Saving:</strong> Money set aside for future use</li>
-                            <li><strong>Investing:</strong> Using money to generate more money</li>
-                            <li><strong>Protection:</strong> Insurance and estate planning</li>
-                        </ul>
-                        
-                        <h3>Why Personal Finance Matters</h3>
-                        <p>Good financial management helps you achieve life goals, reduces stress, and provides security for you and your family.</p>
-                    `,
-                    coins: 5,
-                    duration: "10 min",
-                    category: "Basics",
-                    order: 1
-                },
-                {
-                    id: "budgeting_basics",
-                    title: "Budgeting Basics",
-                    description: "Learn how to create and manage your personal budget",
-                    content: `
-                        <h2>Budgeting Basics</h2>
-                        <p>Budgeting is the process of creating a plan to spend your money. This spending plan is called a budget. Creating this spending plan allows you to determine in advance whether you will have enough money to do the things you need to do or would like to do.</p>
-                        
-                        <h3>Steps to Create a Budget</h3>
-                        <ol>
-                            <li>Calculate your net income</li>
-                            <li>Track your spending</li>
-                            <li>Set realistic goals</li>
-                            <li>Make a plan</li>
-                            <li>Adjust your spending to stay on budget</li>
-                            <li>Review your budget regularly</li>
-                        </ol>
-                        
-                        <h3>50/30/20 Rule</h3>
-                        <p>A popular budgeting method is the 50/30/20 rule:</p>
-                        <ul>
-                            <li><strong>50%</strong> for needs (rent, groceries, utilities)</li>
-                            <li><strong>30%</strong> for wants (entertainment, dining out)</li>
-                            <li><strong>20%</strong> for savings and debt repayment</li>
-                        </ul>
-                    `,
-                    coins: 5,
-                    duration: "15 min",
-                    category: "Budgeting",
-                    order: 2
-                },
-                {
-                    id: "understanding_upi",
-                    title: "Understanding UPI",
-                    description: "Learn about Unified Payments Interface and how it works",
-                    content: `
-                        <h2>Understanding UPI</h2>
-                        <p>Unified Payments Interface (UPI) is an instant real-time payment system developed by National Payments Corporation of India (NPCI). The interface facilitates inter-bank peer-to-peer (P2P) and person-to-merchant (P2M) transactions.</p>
-                        
-                        <h3>How UPI Works</h3>
-                        <p>UPI uses a single mobile application for accessing different bank accounts. It works by creating a unique Virtual Payment Address (VPA) for each user, eliminating the need to share bank details.</p>
-                        
-                        <h3>Key Benefits</h3>
-                        <ul>
-                            <li>Instant money transfer 24/7</li>
-                            <li>Single mobile app for multiple bank accounts</li>
-                            <li>No need to enter bank details</li>
-                            <li>Secure with two-factor authentication</li>
-                            <li>Supports both P2P and merchant payments</li>
-                        </ul>
-                    `,
-                    coins: 5,
-                    duration: "12 min",
-                    category: "Digital Payments",
-                    order: 3
-                },
-                {
-                    id: "digital_safety",
-                    title: "Digital Safety & Security",
-                    description: "Protect your financial information online",
-                    content: `
-                        <h2>Digital Safety & Security</h2>
-                        <p>In today's digital age, protecting your financial information online is crucial. Learn how to safeguard your accounts and personal data from cyber threats.</p>
-                        
-                        <h3>Essential Security Practices</h3>
-                        <ul>
-                            <li>Use strong, unique passwords for each account</li>
-                            <li>Enable two-factor authentication</li>
-                            <li>Be cautious of phishing emails and messages</li>
-                            <li>Keep your software and apps updated</li>
-                            <li>Use secure networks for financial transactions</li>
-                        </ul>
-                    `,
-                    coins: 5,
-                    duration: "12 min",
-                    category: "Security",
-                    order: 4
-                },
-                {
-                    id: "savings_strategies",
-                    title: "Savings Strategies",
-                    description: "Effective ways to save money for your goals",
-                    content: `
-                        <h2>Savings Strategies</h2>
-                        <p>Saving money is essential for financial security and achieving your goals. Here are proven strategies to help you save effectively.</p>
-                        
-                        <h3>Pay Yourself First</h3>
-                        <p>Set aside a portion of your income for savings before paying bills or spending on wants. Automate this process if possible.</p>
-                        
-                        <h3>Set SMART Goals</h3>
-                        <ul>
-                            <li><strong>Specific:</strong> Clearly define what you're saving for</li>
-                            <li><strong>Measurable:</strong> Set exact amounts</li>
-                            <li><strong>Achievable:</strong> Make sure it's realistic</li>
-                            <li><strong>Relevant:</strong> Align with your priorities</li>
-                            <li><strong>Time-bound:</strong> Set a deadline</li>
-                        </ul>
-                        
-                        <h3>Track Your Progress</h3>
-                        <p>Regularly review your savings and adjust your strategy as needed.</p>
-                    `,
-                    coins: 5,
-                    duration: "10 min",
-                    category: "Savings",
-                    order: 5
-                }
-                // Additional 45 lessons would be added here in a real implementation
-            ];
-
-            // 50 Financial Quizzes
-            const quizzes = [
-                {
-                    id: "quiz_1",
-                    question: "What does UPI stand for in banking?",
-                    options: [
-                        "Unified Payments Interface",
-                        "Universal Payment Integration", 
-                        "United Payment Institution",
-                        "Unified Personal Investment"
-                    ],
-                    correctAnswer: 0,
-                    coins: 10,
-                    category: "Digital Payments",
-                    order: 1
-                },
-                {
-                    id: "quiz_2",
-                    question: "Which of these is NOT a benefit of budgeting?",
-                    options: [
-                        "Helps achieve financial goals",
-                        "Reduces financial stress",
-                        "Guarantees wealth accumulation",
-                        "Provides spending control"
-                    ],
-                    correctAnswer: 2,
-                    coins: 10,
-                    category: "Budgeting",
-                    order: 2
-                },
-                {
-                    id: "quiz_3",
-                    question: "According to the 50/30/20 rule, what percentage should go to savings?",
-                    options: ["10%", "15%", "20%", "30%"],
-                    correctAnswer: 2,
-                    coins: 10,
-                    category: "Budgeting",
-                    order: 3
-                },
-                {
-                    id: "quiz_4",
-                    question: "What is the most important practice for digital financial safety?",
-                    options: [
-                        "Using the same password for all accounts",
-                        "Sharing passwords with family members",
-                        "Enabling two-factor authentication",
-                        "Using public Wi-Fi for transactions"
-                    ],
-                    correctAnswer: 2,
-                    coins: 10,
-                    category: "Security",
-                    order: 4
-                },
-                {
-                    id: "quiz_5",
-                    question: "Which of these is a good savings strategy?",
-                    options: [
-                        "Spending all your income each month",
-                        "Paying yourself first",
-                        "Only saving when you have extra money",
-                        "Borrowing to save"
-                    ],
-                    correctAnswer: 1,
-                    coins: 10,
-                    category: "Savings",
-                    order: 5
-                }
-                // Additional 45 quizzes would be added here in a real implementation
-            ];
-
-            // Initialize news
-            const news = [
-                {
-                    id: "news_1",
-                    title: "RBI Issues New Guidelines for Digital Lending",
-                    description: "The Reserve Bank of India has issued comprehensive guidelines for digital lending to enhance transparency and customer protection.",
-                    content: "The new framework mandates direct disbursement of loans to borrowers' accounts and prohibits automatic increase in credit limits.",
-                    date: "2023-11-15",
-                    source: "RBI",
-                    category: "Regulation"
-                },
-                {
-                    id: "news_2",
-                    title: "UPI Transactions Cross 10 Billion Mark Monthly",
-                    description: "Unified Payments Interface transactions have shown massive growth with 10 billion monthly transactions.",
-                    content: "NPCI is planning to introduce new features including UPI Lite for smaller transactions and credit card linking.",
-                    date: "2023-11-10",
-                    source: "NPCI",
-                    category: "Digital Payments"
-                },
-                {
-                    id: "news_3",
-                    title: "SEBI Simplifies KYC Process for Investors",
-                    description: "The Securities and Exchange Board of India has simplified the KYC registration process.",
-                    content: "The new system allows for instant in-person verification through video calls and reduces documentation requirements.",
-                    date: "2023-11-05",
-                    source: "SEBI",
-                    category: "Investment"
-                }
-            ];
-
-            try {
-                // Add lessons to Firestore
-                for (const lesson of lessons) {
-                    await db.collection('lessons').doc(lesson.id).set(lesson);
-                }
-
-                // Add quizzes to Firestore
-                for (const quiz of quizzes) {
-                    await db.collection('quizzes').doc(quiz.id).set(quiz);
-                }
-
-                // Add news to Firestore
-                for (const newsItem of news) {
-                    await db.collection('news').doc(newsItem.id).set(newsItem);
-                }
-
-                console.log('Default data initialized successfully');
-            } catch (error) {
-                console.error('Error initializing default data:', error);
-            }
-        }
-
         // Event Listeners
         getStartedBtn.addEventListener('click', () => {
             showScreen('auth-screen');
@@ -2505,14 +2176,38 @@
         tabCards.forEach(card => {
             card.addEventListener('click', () => {
                 const section = card.getAttribute('data-section');
-                showScreen(`${section}-screen`);
+                if (section === 'play-learn') {
+                    // Show the intermediate selection screen
+                    showScreen('play-learn-selection-screen');
+                } else {
+                    showScreen(`${section}-screen`);
+                }
+            });
+        });
+
+        // Selection card clicks
+        selectionCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const section = card.getAttribute('data-section');
+                if (section === 'learn') {
+                    showScreen('lessons-screen');
+                } else if (section === 'play') {
+                    showScreen('quizzes-screen');
+                }
             });
         });
 
         // Back button clicks
         backBtns.forEach(btn => {
             btn.addEventListener('click', () => {
-                showScreen('dashboard-screen');
+                // If on lessons or quizzes screen, go back to selection screen
+                if (document.getElementById('lessons-screen').classList.contains('active') || 
+                    document.getElementById('quizzes-screen').classList.contains('active')) {
+                    showScreen('play-learn-selection-screen');
+                } else {
+                    // Otherwise go back to dashboard
+                    showScreen('dashboard-screen');
+                }
             });
         });
 
@@ -2520,7 +2215,12 @@
         navItems.forEach(item => {
             item.addEventListener('click', () => {
                 const screen = item.getAttribute('data-screen');
-                showScreen(`${screen}-screen`);
+                if (screen === 'play-learn') {
+                    // Show the intermediate selection screen
+                    showScreen('play-learn-selection-screen');
+                } else {
+                    showScreen(`${screen}-screen`);
+                }
             });
         });
 
@@ -2613,29 +2313,8 @@
             });
         });
 
-        // Play & Learn tabs
-        playLearnTabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                const subsection = tab.getAttribute('data-subsection');
-                
-                playLearnTabs.forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                
-                subsections.forEach(sub => {
-                    sub.classList.remove('active');
-                    if (sub.id === `${subsection}-subsection`) {
-                        sub.classList.add('active');
-                    }
-                });
-            });
-        });
-
         // Initialize the app
         initTheme();
-        
-        // Uncomment the line below to initialize default data (run once)
-        // initializeDefaultData();
-        // initializeDefaultUsers();
 
         // Theme toggle event
         themeToggle.addEventListener('click', toggleTheme);
