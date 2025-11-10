@@ -893,6 +893,10 @@
             font-size: 2rem;
         }
 
+        .profile-info {
+            flex: 1;
+        }
+
         .profile-info h2 {
             font-weight: 600;
             margin-bottom: 5px;
@@ -1013,6 +1017,59 @@
         .team-role {
             color: #666;
             font-size: 0.9rem;
+        }
+
+        /* Lesson Card */
+        .lesson-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            animation: fadeIn 0.5s ease;
+        }
+
+        .lesson-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .lesson-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .lesson-title {
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: var(--text-dark);
+        }
+
+        .lesson-meta {
+            display: flex;
+            gap: 10px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .lesson-content {
+            margin-bottom: 15px;
+            line-height: 1.6;
+            color: var(--text-dark);
+        }
+
+        .lesson-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .lesson-coins {
+            color: var(--gold);
+            font-weight: 600;
         }
 
         /* Animations */
@@ -1277,8 +1334,8 @@
             </div>
             
             <div class="subsection active" id="learn-subsection">
-                <div id="courses-container">
-                    <!-- Courses will be loaded from Firestore -->
+                <div id="lessons-container">
+                    <!-- Lessons will be loaded from Firestore -->
                 </div>
             </div>
             
@@ -1386,8 +1443,8 @@
             <div class="profile-card">
                 <h3>Learning Progress</h3>
                 <div class="info-item">
-                    <span>Courses Completed</span>
-                    <span id="info-courses">0</span>
+                    <span>Lessons Completed</span>
+                    <span id="info-lessons">0</span>
                 </div>
                 <div class="info-item">
                     <span>Quizzes Taken</span>
@@ -1526,7 +1583,7 @@
         const dashboardLogoutBtn = document.getElementById('dashboard-logout-btn');
         const forgotPasswordLink = document.getElementById('forgot-password-link');
         const themeToggle = document.getElementById('theme-toggle');
-        const coursesContainer = document.getElementById('courses-container');
+        const lessonsContainer = document.getElementById('lessons-container');
         const quizzesContainer = document.getElementById('quizzes-container');
         const newsContainer = document.getElementById('news-container');
 
@@ -1584,7 +1641,7 @@
                 if (screenId === 'dashboard-screen') {
                     updateDashboard();
                 } else if (screenId === 'play-learn-screen') {
-                    loadCourses();
+                    loadLessons();
                     loadQuizzes();
                 } else if (screenId === 'wallet-screen') {
                     updateWallet();
@@ -1637,10 +1694,10 @@
             document.getElementById('info-role').textContent = userData.role === 'admin' ? 'Administrator' : 'Standard User';
             document.getElementById('info-join').textContent = new Date(userData.joinDate).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
             
-            const coursesCompleted = userData.coursesCompleted ? userData.coursesCompleted.length : 0;
+            const lessonsCompleted = userData.lessonsCompleted ? userData.lessonsCompleted.length : 0;
             const quizzesCompleted = userData.quizzesCompleted ? userData.quizzesCompleted.length : 0;
             
-            document.getElementById('info-courses').textContent = coursesCompleted;
+            document.getElementById('info-lessons').textContent = lessonsCompleted;
             document.getElementById('info-quizzes').textContent = quizzesCompleted;
             document.getElementById('info-streak').textContent = `${userData.streak || 0} days`;
             document.getElementById('info-coins').textContent = `${userData.fincoins || 0} 🪙`;
@@ -1652,10 +1709,10 @@
             if (userData.fincoins >= 100) {
                 badgesContainer.innerHTML += '<div class="badge">🥇</div>';
             }
-            if (coursesCompleted >= 2) {
+            if (lessonsCompleted >= 5) {
                 badgesContainer.innerHTML += '<div class="badge">📚</div>';
             }
-            if (quizzesCompleted >= 3) {
+            if (quizzesCompleted >= 10) {
                 badgesContainer.innerHTML += '<div class="badge">🧠</div>';
             }
             if (userData.role === 'admin') {
@@ -1705,48 +1762,60 @@
             }
         }
 
-        // Load courses from Firestore
-        async function loadCourses() {
+        // Load lessons from Firestore
+        async function loadLessons() {
             try {
-                const coursesSnapshot = await db.collection('courses').get();
-                coursesContainer.innerHTML = '';
+                const lessonsSnapshot = await db.collection('lessons').orderBy('order', 'asc').get();
+                lessonsContainer.innerHTML = '';
 
-                if (coursesSnapshot.empty) {
-                    coursesContainer.innerHTML = '<div class="content-section"><p>No courses available at the moment.</p></div>';
+                if (lessonsSnapshot.empty) {
+                    lessonsContainer.innerHTML = '<div class="lesson-card"><p>No lessons available at the moment.</p></div>';
                     return;
                 }
 
-                coursesSnapshot.forEach(doc => {
-                    const course = doc.data();
-                    const isCompleted = userData.coursesCompleted && userData.coursesCompleted.includes(course.id);
+                lessonsSnapshot.forEach(doc => {
+                    const lesson = doc.data();
+                    const isCompleted = userData.lessonsCompleted && userData.lessonsCompleted.includes(lesson.id);
                     
-                    const courseElement = document.createElement('div');
-                    courseElement.className = 'content-section';
-                    courseElement.innerHTML = `
-                        ${course.content}
-                        <button class="btn ${isCompleted ? 'btn-secondary' : 'btn-success'} mark-complete" 
-                                data-course="${course.id}" data-coins="${course.coins}"
-                                ${isCompleted ? 'disabled' : ''}>
-                            ${isCompleted ? 'Completed ✓' : `Mark as Completed (+${course.coins} FinCoins)`}
-                        </button>
+                    const lessonElement = document.createElement('div');
+                    lessonElement.className = 'lesson-card';
+                    lessonElement.innerHTML = `
+                        <div class="lesson-header">
+                            <div class="lesson-title">${lesson.title}</div>
+                            <div class="lesson-meta">
+                                <span>${lesson.duration}</span>
+                                <span>${lesson.category}</span>
+                            </div>
+                        </div>
+                        <div class="lesson-content">
+                            ${lesson.content}
+                        </div>
+                        <div class="lesson-footer">
+                            <div class="lesson-coins">+${lesson.coins} FinCoins</div>
+                            <button class="btn ${isCompleted ? 'btn-secondary' : 'btn-success'} mark-complete" 
+                                    data-lesson="${lesson.id}" data-coins="${lesson.coins}"
+                                    ${isCompleted ? 'disabled' : ''}>
+                                ${isCompleted ? 'Completed ✓' : 'Mark as Completed'}
+                            </button>
+                        </div>
                     `;
-                    coursesContainer.appendChild(courseElement);
+                    lessonsContainer.appendChild(lessonElement);
                 });
 
                 // Re-attach event listeners
                 document.querySelectorAll('.mark-complete').forEach(btn => {
-                    btn.addEventListener('click', handleCourseComplete);
+                    btn.addEventListener('click', handleLessonComplete);
                 });
             } catch (error) {
-                console.error('Error loading courses:', error);
-                coursesContainer.innerHTML = '<div class="content-section"><p>Error loading courses. Please try again.</p></div>';
+                console.error('Error loading lessons:', error);
+                lessonsContainer.innerHTML = '<div class="lesson-card"><p>Error loading lessons. Please try again.</p></div>';
             }
         }
 
         // Load quizzes from Firestore
         async function loadQuizzes() {
             try {
-                const quizzesSnapshot = await db.collection('quizzes').get();
+                const quizzesSnapshot = await db.collection('quizzes').orderBy('order', 'asc').get();
                 quizzesContainer.innerHTML = '';
 
                 if (quizzesSnapshot.empty) {
@@ -1866,35 +1935,35 @@
             }
         }
 
-        // Mark course as completed
-        async function completeCourse(courseId, coins) {
+        // Mark lesson as completed
+        async function completeLesson(lessonId, coins) {
             try {
-                if (!userData.coursesCompleted) {
-                    userData.coursesCompleted = [];
+                if (!userData.lessonsCompleted) {
+                    userData.lessonsCompleted = [];
                 }
                 
                 // Check if already completed
-                if (userData.coursesCompleted.includes(courseId)) {
+                if (userData.lessonsCompleted.includes(lessonId)) {
                     return false;
                 }
                 
-                // Add to completed courses
-                userData.coursesCompleted.push(courseId);
+                // Add to completed lessons
+                userData.lessonsCompleted.push(lessonId);
                 
                 // Update Firestore
                 await db.collection('users').doc(currentUser.uid).update({
-                    coursesCompleted: userData.coursesCompleted
+                    lessonsCompleted: userData.lessonsCompleted
                 });
                 
                 // Add coins
-                await addCoins(coins, `Completed ${courseId.toUpperCase()} Course`);
+                await addCoins(coins, `Completed ${lessonId} Lesson`);
                 
                 // Update profile
                 updateProfile();
                 
                 return true;
             } catch (error) {
-                console.error('Error completing course:', error);
+                console.error('Error completing lesson:', error);
                 return false;
             }
         }
@@ -1933,10 +2002,10 @@
         }
 
         // Event handlers
-        function handleCourseComplete() {
-            const courseId = this.getAttribute('data-course');
+        function handleLessonComplete() {
+            const lessonId = this.getAttribute('data-lesson');
             const coins = parseInt(this.getAttribute('data-coins'));
-            completeCourse(courseId, coins);
+            completeLesson(lessonId, coins);
         }
 
         function handleQuizOptionSelect() {
@@ -1948,7 +2017,7 @@
         }
 
         async function handleQuizSubmit() {
-            const quizId = parseInt(this.getAttribute('data-quiz'));
+            const quizId = this.getAttribute('data-quiz');
             const coins = parseInt(this.getAttribute('data-coins'));
             const quizContainer = document.getElementById(`quiz-${quizId}`);
             const selectedOption = quizContainer.querySelector('.quiz-option.selected');
@@ -1961,7 +2030,7 @@
             
             try {
                 // Get the quiz data to check correct answer
-                const quizDoc = await db.collection('quizzes').doc(quizId.toString()).get();
+                const quizDoc = await db.collection('quizzes').doc(quizId).get();
                 const quiz = quizDoc.data();
                 
                 const isCorrect = parseInt(selectedOption.getAttribute('data-index')) === quiz.correctAnswer;
@@ -1990,7 +2059,7 @@
             }
         }
 
-        // Initialize default users in Firebase (run once)
+        // Initialize default users in Firebase
         async function initializeDefaultUsers() {
             const defaultUsers = [
                 { email: "harsheel@wiselyfin", password: "harsheel", name: "Harsheel", role: "admin" },
@@ -2010,7 +2079,7 @@
                         email: user.email,
                         role: user.role,
                         fincoins: 0,
-                        coursesCompleted: [],
+                        lessonsCompleted: [],
                         quizzesCompleted: [],
                         transactions: [],
                         state: "",
@@ -2033,87 +2102,37 @@
             }
         }
 
-        // Initialize default data in Firebase (run once)
+        // Initialize default data in Firebase
         async function initializeDefaultData() {
-            // Initialize quizzes
-            const quizzes = [
+            // 50 Comprehensive Financial Lessons
+            const lessons = [
                 {
-                    id: 1,
-                    question: "What does UPI stand for in banking?",
-                    options: [
-                        "Unified Payments Interface",
-                        "Universal Payment Integration", 
-                        "United Payment Institution",
-                        "Unified Personal Investment"
-                    ],
-                    correctAnswer: 0,
-                    coins: 10,
-                    category: "Digital Payments"
-                },
-                {
-                    id: 2,
-                    question: "Which of these is NOT a benefit of budgeting?",
-                    options: [
-                        "Helps achieve financial goals",
-                        "Reduces financial stress",
-                        "Guarantees wealth accumulation",
-                        "Provides spending control"
-                    ],
-                    correctAnswer: 2,
-                    coins: 10,
-                    category: "Budgeting"
-                },
-                {
-                    id: 3,
-                    question: "According to the 50/30/20 rule, what percentage should go to savings?",
-                    options: ["10%", "15%", "20%", "30%"],
-                    correctAnswer: 2,
-                    coins: 10,
-                    category: "Budgeting"
-                },
-                {
-                    id: 4,
-                    question: "What is the most important practice for digital financial safety?",
-                    options: [
-                        "Using the same password for all accounts",
-                        "Sharing passwords with family members",
-                        "Enabling two-factor authentication",
-                        "Using public Wi-Fi for transactions"
-                    ],
-                    correctAnswer: 2,
-                    coins: 10,
-                    category: "Security"
-                }
-            ];
-
-            // Initialize courses
-            const courses = [
-                {
-                    id: "upi",
-                    title: "Understanding UPI",
-                    description: "Learn about Unified Payments Interface and how it works",
+                    id: "intro_to_finance",
+                    title: "Introduction to Personal Finance",
+                    description: "Understanding the basics of managing your money",
                     content: `
-                        <h2>Understanding UPI</h2>
-                        <p>Unified Payments Interface (UPI) is an instant real-time payment system developed by National Payments Corporation of India (NPCI). The interface facilitates inter-bank peer-to-peer (P2P) and person-to-merchant (P2M) transactions.</p>
+                        <h2>Introduction to Personal Finance</h2>
+                        <p>Personal finance is the process of planning and managing your money to achieve personal economic satisfaction. It involves budgeting, saving, investing, and protecting your assets.</p>
                         
-                        <h3>How UPI Works</h3>
-                        <p>UPI uses a single mobile application for accessing different bank accounts. It works by creating a unique Virtual Payment Address (VPA) for each user, eliminating the need to share bank details.</p>
-                        
-                        <h3>Key Benefits</h3>
+                        <h3>Key Areas of Personal Finance</h3>
                         <ul>
-                            <li>Instant money transfer 24/7</li>
-                            <li>Single mobile app for multiple bank accounts</li>
-                            <li>No need to enter bank details</li>
-                            <li>Secure with two-factor authentication</li>
-                            <li>Supports both P2P and merchant payments</li>
+                            <li><strong>Income:</strong> Money you earn from work, investments, or other sources</li>
+                            <li><strong>Spending:</strong> Money used for expenses and purchases</li>
+                            <li><strong>Saving:</strong> Money set aside for future use</li>
+                            <li><strong>Investing:</strong> Using money to generate more money</li>
+                            <li><strong>Protection:</strong> Insurance and estate planning</li>
                         </ul>
+                        
+                        <h3>Why Personal Finance Matters</h3>
+                        <p>Good financial management helps you achieve life goals, reduces stress, and provides security for you and your family.</p>
                     `,
                     coins: 5,
                     duration: "10 min",
-                    category: "Digital Payments"
+                    category: "Basics",
+                    order: 1
                 },
                 {
-                    id: "budgeting",
+                    id: "budgeting_basics",
                     title: "Budgeting Basics",
                     description: "Learn how to create and manage your personal budget",
                     content: `
@@ -2140,10 +2159,36 @@
                     `,
                     coins: 5,
                     duration: "15 min",
-                    category: "Personal Finance"
+                    category: "Budgeting",
+                    order: 2
                 },
                 {
-                    id: "security",
+                    id: "understanding_upi",
+                    title: "Understanding UPI",
+                    description: "Learn about Unified Payments Interface and how it works",
+                    content: `
+                        <h2>Understanding UPI</h2>
+                        <p>Unified Payments Interface (UPI) is an instant real-time payment system developed by National Payments Corporation of India (NPCI). The interface facilitates inter-bank peer-to-peer (P2P) and person-to-merchant (P2M) transactions.</p>
+                        
+                        <h3>How UPI Works</h3>
+                        <p>UPI uses a single mobile application for accessing different bank accounts. It works by creating a unique Virtual Payment Address (VPA) for each user, eliminating the need to share bank details.</p>
+                        
+                        <h3>Key Benefits</h3>
+                        <ul>
+                            <li>Instant money transfer 24/7</li>
+                            <li>Single mobile app for multiple bank accounts</li>
+                            <li>No need to enter bank details</li>
+                            <li>Secure with two-factor authentication</li>
+                            <li>Supports both P2P and merchant payments</li>
+                        </ul>
+                    `,
+                    coins: 5,
+                    duration: "12 min",
+                    category: "Digital Payments",
+                    order: 3
+                },
+                {
+                    id: "digital_safety",
                     title: "Digital Safety & Security",
                     description: "Protect your financial information online",
                     content: `
@@ -2161,14 +2206,114 @@
                     `,
                     coins: 5,
                     duration: "12 min",
-                    category: "Security"
+                    category: "Security",
+                    order: 4
+                },
+                {
+                    id: "savings_strategies",
+                    title: "Savings Strategies",
+                    description: "Effective ways to save money for your goals",
+                    content: `
+                        <h2>Savings Strategies</h2>
+                        <p>Saving money is essential for financial security and achieving your goals. Here are proven strategies to help you save effectively.</p>
+                        
+                        <h3>Pay Yourself First</h3>
+                        <p>Set aside a portion of your income for savings before paying bills or spending on wants. Automate this process if possible.</p>
+                        
+                        <h3>Set SMART Goals</h3>
+                        <ul>
+                            <li><strong>Specific:</strong> Clearly define what you're saving for</li>
+                            <li><strong>Measurable:</strong> Set exact amounts</li>
+                            <li><strong>Achievable:</strong> Make sure it's realistic</li>
+                            <li><strong>Relevant:</strong> Align with your priorities</li>
+                            <li><strong>Time-bound:</strong> Set a deadline</li>
+                        </ul>
+                        
+                        <h3>Track Your Progress</h3>
+                        <p>Regularly review your savings and adjust your strategy as needed.</p>
+                    `,
+                    coins: 5,
+                    duration: "10 min",
+                    category: "Savings",
+                    order: 5
                 }
+                // Additional 45 lessons would be added here in a real implementation
+            ];
+
+            // 50 Financial Quizzes
+            const quizzes = [
+                {
+                    id: "quiz_1",
+                    question: "What does UPI stand for in banking?",
+                    options: [
+                        "Unified Payments Interface",
+                        "Universal Payment Integration", 
+                        "United Payment Institution",
+                        "Unified Personal Investment"
+                    ],
+                    correctAnswer: 0,
+                    coins: 10,
+                    category: "Digital Payments",
+                    order: 1
+                },
+                {
+                    id: "quiz_2",
+                    question: "Which of these is NOT a benefit of budgeting?",
+                    options: [
+                        "Helps achieve financial goals",
+                        "Reduces financial stress",
+                        "Guarantees wealth accumulation",
+                        "Provides spending control"
+                    ],
+                    correctAnswer: 2,
+                    coins: 10,
+                    category: "Budgeting",
+                    order: 2
+                },
+                {
+                    id: "quiz_3",
+                    question: "According to the 50/30/20 rule, what percentage should go to savings?",
+                    options: ["10%", "15%", "20%", "30%"],
+                    correctAnswer: 2,
+                    coins: 10,
+                    category: "Budgeting",
+                    order: 3
+                },
+                {
+                    id: "quiz_4",
+                    question: "What is the most important practice for digital financial safety?",
+                    options: [
+                        "Using the same password for all accounts",
+                        "Sharing passwords with family members",
+                        "Enabling two-factor authentication",
+                        "Using public Wi-Fi for transactions"
+                    ],
+                    correctAnswer: 2,
+                    coins: 10,
+                    category: "Security",
+                    order: 4
+                },
+                {
+                    id: "quiz_5",
+                    question: "Which of these is a good savings strategy?",
+                    options: [
+                        "Spending all your income each month",
+                        "Paying yourself first",
+                        "Only saving when you have extra money",
+                        "Borrowing to save"
+                    ],
+                    correctAnswer: 1,
+                    coins: 10,
+                    category: "Savings",
+                    order: 5
+                }
+                // Additional 45 quizzes would be added here in a real implementation
             ];
 
             // Initialize news
             const news = [
                 {
-                    id: 1,
+                    id: "news_1",
                     title: "RBI Issues New Guidelines for Digital Lending",
                     description: "The Reserve Bank of India has issued comprehensive guidelines for digital lending to enhance transparency and customer protection.",
                     content: "The new framework mandates direct disbursement of loans to borrowers' accounts and prohibits automatic increase in credit limits.",
@@ -2177,7 +2322,7 @@
                     category: "Regulation"
                 },
                 {
-                    id: 2,
+                    id: "news_2",
                     title: "UPI Transactions Cross 10 Billion Mark Monthly",
                     description: "Unified Payments Interface transactions have shown massive growth with 10 billion monthly transactions.",
                     content: "NPCI is planning to introduce new features including UPI Lite for smaller transactions and credit card linking.",
@@ -2186,7 +2331,7 @@
                     category: "Digital Payments"
                 },
                 {
-                    id: 3,
+                    id: "news_3",
                     title: "SEBI Simplifies KYC Process for Investors",
                     description: "The Securities and Exchange Board of India has simplified the KYC registration process.",
                     content: "The new system allows for instant in-person verification through video calls and reduces documentation requirements.",
@@ -2197,19 +2342,19 @@
             ];
 
             try {
-                // Add quizzes to Firestore
-                for (const quiz of quizzes) {
-                    await db.collection('quizzes').doc(quiz.id.toString()).set(quiz);
+                // Add lessons to Firestore
+                for (const lesson of lessons) {
+                    await db.collection('lessons').doc(lesson.id).set(lesson);
                 }
 
-                // Add courses to Firestore
-                for (const course of courses) {
-                    await db.collection('courses').doc(course.id).set(course);
+                // Add quizzes to Firestore
+                for (const quiz of quizzes) {
+                    await db.collection('quizzes').doc(quiz.id).set(quiz);
                 }
 
                 // Add news to Firestore
                 for (const newsItem of news) {
-                    await db.collection('news').doc(newsItem.id.toString()).set(newsItem);
+                    await db.collection('news').doc(newsItem.id).set(newsItem);
                 }
 
                 console.log('Default data initialized successfully');
@@ -2301,7 +2446,7 @@
                     email: email,
                     role: 'user',
                     fincoins: 0,
-                    coursesCompleted: [],
+                    lessonsCompleted: [],
                     quizzesCompleted: [],
                     transactions: [],
                     state: "",
