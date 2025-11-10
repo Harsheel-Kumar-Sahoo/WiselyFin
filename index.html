@@ -1503,828 +1503,828 @@
 
     <script>
         // Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyAH6a-5noZFdYmrH73tmLmoQBowD_onxf4",
-            authDomain: "wiselyfin.firebaseapp.com",
-            projectId: "wiselyfin",
-            storageBucket: "wiselyfin.firebasestorage.app",
-            messagingSenderId: "335346931759",
-            appId: "1:335346931759:web:e0b19a12ae792659a48eda",
-            measurementId: "G-N5F3YH9024"
+const firebaseConfig = {
+    apiKey: "AIzaSyAH6a-5noZFdYmrH73tmLmoQBowD_onxf4",
+    authDomain: "wiselyfin.firebaseapp.com",
+    projectId: "wiselyfin",
+    storageBucket: "wiselyfin.firebasestorage.app",
+    messagingSenderId: "335346931759",
+    appId: "1:335346931759:web:e0b19a12ae792659a48eda",
+    measurementId: "G-N5F3YH9024"
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+// Current user data
+let currentUser = null;
+let userData = null;
+
+// DOM Elements
+const screens = document.querySelectorAll('.screen');
+const startScreen = document.getElementById('start-screen');
+const authScreen = document.getElementById('auth-screen');
+const dashboardScreen = document.getElementById('dashboard-screen');
+const playLearnSelectionScreen = document.getElementById('play-learn-selection-screen');
+const getStartedBtn = document.getElementById('get-started-btn');
+const authTabs = document.querySelectorAll('.auth-tab');
+const authForms = document.querySelectorAll('.auth-form');
+const loginBtn = document.getElementById('login-btn');
+const signupBtn = document.getElementById('signup-btn');
+const loginError = document.getElementById('login-error');
+const signupError = document.getElementById('signup-error');
+const signupSuccess = document.getElementById('signup-success');
+const tabCards = document.querySelectorAll('.tab-card');
+const backBtns = document.querySelectorAll('.back-btn');
+const navItems = document.querySelectorAll('.nav-item');
+const bottomNavbar = document.getElementById('bottom-navbar');
+const logoutBtn = document.getElementById('logout-btn');
+const dashboardLogoutBtn = document.getElementById('dashboard-logout-btn');
+const forgotPasswordLink = document.getElementById('forgot-password-link');
+const themeToggle = document.getElementById('theme-toggle');
+const lessonsContainer = document.getElementById('lessons-container');
+const quizzesContainer = document.getElementById('quizzes-container');
+const newsContainer = document.getElementById('news-container');
+const selectionCards = document.querySelectorAll('.selection-card');
+
+// Theme Management
+function initTheme() {
+    const savedTheme = localStorage.getItem('wiselyfin-theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    updateThemeIcon(savedTheme);
+}
+
+function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('wiselyfin-theme', newTheme);
+    updateThemeIcon(newTheme);
+}
+
+function updateThemeIcon(theme) {
+    const icon = themeToggle.querySelector('i');
+    if (theme === 'dark') {
+        icon.className = 'fas fa-sun';
+    } else {
+        icon.className = 'fas fa-moon';
+    }
+}
+
+// Show specific screen
+function showScreen(screenId) {
+    screens.forEach(screen => {
+        screen.classList.remove('active');
+    });
+    document.getElementById(screenId).classList.add('active');
+    
+    // Show/hide bottom navbar
+    if (screenId === 'dashboard-screen' || (screenId.includes('-screen') && screenId !== 'start-screen' && screenId !== 'auth-screen')) {
+        bottomNavbar.classList.add('visible');
+    } else {
+        bottomNavbar.classList.remove('visible');
+    }
+    
+    // Update bottom nav active state
+    if (screenId !== 'start-screen' && screenId !== 'auth-screen') {
+        navItems.forEach(item => {
+            item.classList.remove('active');
+            if (item.getAttribute('data-screen') === screenId.replace('-screen', '')) {
+                item.classList.add('active');
+            }
+        });
+    }
+
+    // Load data when screens are shown
+    if (currentUser) {
+        if (screenId === 'dashboard-screen') {
+            updateDashboard();
+        } else if (screenId === 'lessons-screen') {
+            loadLessons();
+        } else if (screenId === 'quizzes-screen') {
+            loadQuizzes();
+        } else if (screenId === 'wallet-screen') {
+            updateWallet();
+        } else if (screenId === 'news-screen') {
+            loadNews();
+        } else if (screenId === 'profile-screen') {
+            updateProfile();
+        } else if (screenId === 'leaderboard-screen') {
+            updateLeaderboard();
+        }
+    }
+}
+
+// Update dashboard with user data
+function updateDashboard() {
+    document.getElementById('user-greeting').textContent = `Hi ${userData.name} 👋`;
+}
+
+// Update wallet with user data
+function updateWallet() {
+    document.getElementById('user-balance').textContent = userData.fincoins || 0;
+    
+    const transactionHistory = document.getElementById('transaction-history');
+    transactionHistory.innerHTML = '';
+    
+    if (userData.transactions && userData.transactions.length > 0) {
+        userData.transactions.forEach(transaction => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${new Date(transaction.date).toLocaleDateString()}</td>
+                <td>${new Date(transaction.date).toLocaleTimeString()}</td>
+                <td>${transaction.task}</td>
+                <td class="coin-earned">+${transaction.coins}</td>
+            `;
+            transactionHistory.appendChild(row);
+        });
+    } else {
+        transactionHistory.innerHTML = '<tr><td colspan="4" style="text-align: center;">No transactions yet</td></tr>';
+    }
+}
+
+// Update profile with user data
+function updateProfile() {
+    document.getElementById('profile-avatar').textContent = userData.name.charAt(0);
+    document.getElementById('profile-name').textContent = userData.name;
+    document.getElementById('profile-role').textContent = userData.role === 'admin' ? 'Admin Member' : 'Member';
+    
+    document.getElementById('info-name').textContent = userData.name;
+    document.getElementById('info-email').textContent = userData.email;
+    document.getElementById('info-role').textContent = userData.role === 'admin' ? 'Administrator' : 'Standard User';
+    document.getElementById('info-join').textContent = new Date(userData.joinDate).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    
+    const lessonsCompleted = userData.lessonsCompleted ? userData.lessonsCompleted.length : 0;
+    const quizzesCompleted = userData.quizzesCompleted ? userData.quizzesCompleted.length : 0;
+    
+    document.getElementById('info-lessons').textContent = lessonsCompleted;
+    document.getElementById('info-quizzes').textContent = quizzesCompleted;
+    document.getElementById('info-streak').textContent = `${userData.streak || 0} days`;
+    document.getElementById('info-coins').textContent = `${userData.fincoins || 0} 🪙`;
+    
+    // Update badges
+    const badgesContainer = document.getElementById('badges-container');
+    badgesContainer.innerHTML = '';
+    
+    if (userData.fincoins >= 100) {
+        badgesContainer.innerHTML += '<div class="badge">🥇</div>';
+    }
+    if (lessonsCompleted >= 5) {
+        badgesContainer.innerHTML += '<div class="badge">📚</div>';
+    }
+    if (quizzesCompleted >= 10) {
+        badgesContainer.innerHTML += '<div class="badge">🧠</div>';
+    }
+    if (userData.role === 'admin') {
+        badgesContainer.innerHTML += '<div class="badge">⭐</div>';
+    }
+}
+
+// Update leaderboard
+async function updateLeaderboard() {
+    const leaderboardContainer = document.getElementById('leaderboard-container');
+    leaderboardContainer.innerHTML = '<div style="text-align: center; padding: 20px;">Loading leaderboard...</div>';
+    
+    try {
+        // Get all users sorted by fincoins
+        const usersSnapshot = await db.collection('users')
+            .orderBy('fincoins', 'desc')
+            .limit(10)
+            .get();
+        
+        leaderboardContainer.innerHTML = '';
+        
+        if (usersSnapshot.empty) {
+            leaderboardContainer.innerHTML = '<div style="text-align: center; padding: 20px;">No users found</div>';
+            return;
+        }
+        
+        let rank = 1;
+        usersSnapshot.forEach(doc => {
+            const user = doc.data();
+            const rankClass = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : '';
+            
+            const card = document.createElement('div');
+            card.className = 'leaderboard-card';
+            card.innerHTML = `
+                <div class="rank ${rankClass}">${rank}</div>
+                <div class="user-info">
+                    <div class="user-name">${user.name}</div>
+                </div>
+                <div class="user-coins">${user.fincoins || 0} 🪙</div>
+            `;
+            leaderboardContainer.appendChild(card);
+            rank++;
+        });
+    } catch (error) {
+        console.error('Error loading leaderboard:', error);
+        leaderboardContainer.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--error);">Error loading leaderboard</div>';
+    }
+}
+
+// Load lessons from Firestore
+async function loadLessons() {
+    try {
+        console.log("Loading lessons...");
+        const lessonsSnapshot = await db.collection('lessons').orderBy('order', 'asc').get();
+        lessonsContainer.innerHTML = '';
+
+        if (lessonsSnapshot.empty) {
+            lessonsContainer.innerHTML = '<div class="lesson-card"><p>No lessons available at the moment.</p></div>';
+            console.log("No lessons found in database");
+            return;
+        }
+
+        console.log(`Found ${lessonsSnapshot.size} lessons`);
+        
+        lessonsSnapshot.forEach(doc => {
+            const lesson = doc.data();
+            console.log('Processing lesson:', lesson.title);
+            const isCompleted = userData.lessonsCompleted && userData.lessonsCompleted.includes(lesson.id);
+            
+            const lessonElement = document.createElement('div');
+            lessonElement.className = 'lesson-card';
+            lessonElement.innerHTML = `
+                <div class="lesson-header">
+                    <div class="lesson-title">${lesson.title}</div>
+                    <div class="lesson-meta">
+                        <span>${lesson.duration}</span>
+                        <span>${lesson.category}</span>
+                    </div>
+                </div>
+                <div class="lesson-content">
+                    ${lesson.content}
+                </div>
+                <div class="lesson-footer">
+                    <div class="lesson-coins">+${lesson.coins} FinCoins</div>
+                    <button class="btn ${isCompleted ? 'btn-secondary' : 'btn-success'} mark-complete" 
+                            data-lesson="${lesson.id}" data-coins="${lesson.coins}"
+                            ${isCompleted ? 'disabled' : ''}>
+                        ${isCompleted ? 'Completed ✓' : 'Mark as Completed'}
+                    </button>
+                </div>
+            `;
+            lessonsContainer.appendChild(lessonElement);
+        });
+
+        // Re-attach event listeners
+        document.querySelectorAll('.mark-complete').forEach(btn => {
+            btn.addEventListener('click', handleLessonComplete);
+        });
+        
+    } catch (error) {
+        console.error('Error loading lessons:', error);
+        lessonsContainer.innerHTML = '<div class="lesson-card"><p>Error loading lessons. Please try again.</p></div>';
+    }
+}
+
+// Load quizzes from Firestore
+async function loadQuizzes() {
+    try {
+        console.log("Loading quizzes...");
+        const quizzesSnapshot = await db.collection('quizzes').orderBy('order', 'asc').get();
+        quizzesContainer.innerHTML = '';
+
+        if (quizzesSnapshot.empty) {
+            quizzesContainer.innerHTML = '<div class="quiz-container"><p>No quizzes available at the moment.</p></div>';
+            console.log("No quizzes found in database");
+            return;
+        }
+
+        console.log(`Found ${quizzesSnapshot.size} quizzes`);
+        
+        quizzesSnapshot.forEach(doc => {
+            const quiz = doc.data();
+            console.log('Processing quiz:', quiz.question);
+            const isCompleted = userData.quizzesCompleted && userData.quizzesCompleted.includes(quiz.id);
+            
+            const quizElement = document.createElement('div');
+            quizElement.className = 'quiz-container';
+            quizElement.id = `quiz-${quiz.id}`;
+            quizElement.innerHTML = `
+                <div class="quiz-question">${quiz.question}</div>
+                <div class="quiz-options">
+                    ${quiz.options.map((option, index) => `
+                        <div class="quiz-option" data-index="${index}">${option}</div>
+                    `).join('')}
+                </div>
+                <button class="btn submit-quiz" data-quiz="${quiz.id}" data-coins="${quiz.coins}"
+                        ${isCompleted ? 'disabled' : ''}>
+                    ${isCompleted ? 'Completed ✓' : 'Submit Answer'}
+                </button>
+                <div class="quiz-result"></div>
+            `;
+            quizzesContainer.appendChild(quizElement);
+        });
+
+        // Re-attach event listeners
+        document.querySelectorAll('.quiz-option').forEach(option => {
+            option.addEventListener('click', handleQuizOptionSelect);
+        });
+
+        document.querySelectorAll('.submit-quiz').forEach(btn => {
+            btn.addEventListener('click', handleQuizSubmit);
+        });
+        
+    } catch (error) {
+        console.error('Error loading quizzes:', error);
+        quizzesContainer.innerHTML = '<div class="quiz-container"><p>Error loading quizzes. Please try again.</p></div>';
+    }
+}
+
+// Load news from Firestore
+async function loadNews() {
+    try {
+        const newsSnapshot = await db.collection('news').orderBy('date', 'desc').get();
+        newsContainer.innerHTML = '';
+
+        if (newsSnapshot.empty) {
+            newsContainer.innerHTML = '<div class="news-card"><p>No news available at the moment.</p></div>';
+            return;
+        }
+
+        newsSnapshot.forEach(doc => {
+            const newsItem = doc.data();
+            const newsElement = document.createElement('div');
+            newsElement.className = 'news-card';
+            newsElement.innerHTML = `
+                <div class="news-title">${newsItem.title}</div>
+                <div class="news-meta">
+                    <span>${new Date(newsItem.date).toLocaleDateString()}</span>
+                    <span>Source: ${newsItem.source}</span>
+                </div>
+                <div class="news-description">
+                    ${newsItem.description}
+                </div>
+                <button class="btn read-more-btn" style="padding: 8px 16px; font-size: 0.9rem;">Read More</button>
+            `;
+            newsContainer.appendChild(newsElement);
+        });
+    } catch (error) {
+        console.error('Error loading news:', error);
+        newsContainer.innerHTML = '<div class="news-card"><p>Error loading news. Please try again.</p></div>';
+    }
+}
+
+// Add coins to user
+async function addCoins(amount, task) {
+    try {
+        // Update local data
+        userData.fincoins = (userData.fincoins || 0) + amount;
+        
+        // Add transaction
+        if (!userData.transactions) {
+            userData.transactions = [];
+        }
+        
+        const transaction = {
+            date: new Date().toISOString(),
+            task: task,
+            coins: amount
         };
-
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-
-        // Current user data
-        let currentUser = null;
-        let userData = null;
-
-        // DOM Elements
-        const screens = document.querySelectorAll('.screen');
-        const startScreen = document.getElementById('start-screen');
-        const authScreen = document.getElementById('auth-screen');
-        const dashboardScreen = document.getElementById('dashboard-screen');
-        const playLearnSelectionScreen = document.getElementById('play-learn-selection-screen');
-        const getStartedBtn = document.getElementById('get-started-btn');
-        const authTabs = document.querySelectorAll('.auth-tab');
-        const authForms = document.querySelectorAll('.auth-form');
-        const loginBtn = document.getElementById('login-btn');
-        const signupBtn = document.getElementById('signup-btn');
-        const loginError = document.getElementById('login-error');
-        const signupError = document.getElementById('signup-error');
-        const signupSuccess = document.getElementById('signup-success');
-        const tabCards = document.querySelectorAll('.tab-card');
-        const backBtns = document.querySelectorAll('.back-btn');
-        const navItems = document.querySelectorAll('.nav-item');
-        const bottomNavbar = document.getElementById('bottom-navbar');
-        const logoutBtn = document.getElementById('logout-btn');
-        const dashboardLogoutBtn = document.getElementById('dashboard-logout-btn');
-        const forgotPasswordLink = document.getElementById('forgot-password-link');
-        const themeToggle = document.getElementById('theme-toggle');
-        const lessonsContainer = document.getElementById('lessons-container');
-        const quizzesContainer = document.getElementById('quizzes-container');
-        const newsContainer = document.getElementById('news-container');
-        const selectionCards = document.querySelectorAll('.selection-card');
-
-        // Theme Management
-        function initTheme() {
-            const savedTheme = localStorage.getItem('wiselyfin-theme') || 'light';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-            updateThemeIcon(savedTheme);
-        }
-
-        function toggleTheme() {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-            
-            document.documentElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('wiselyfin-theme', newTheme);
-            updateThemeIcon(newTheme);
-        }
-
-        function updateThemeIcon(theme) {
-            const icon = themeToggle.querySelector('i');
-            if (theme === 'dark') {
-                icon.className = 'fas fa-sun';
-            } else {
-                icon.className = 'fas fa-moon';
-            }
-        }
-
-        // Show specific screen
-        function showScreen(screenId) {
-            screens.forEach(screen => {
-                screen.classList.remove('active');
-            });
-            document.getElementById(screenId).classList.add('active');
-            
-            // Show/hide bottom navbar
-            if (screenId === 'dashboard-screen' || (screenId.includes('-screen') && screenId !== 'start-screen' && screenId !== 'auth-screen' && screenId !== 'play-learn-selection-screen')) {
-                bottomNavbar.classList.add('visible');
-            } else {
-                bottomNavbar.classList.remove('visible');
-            }
-            
-            // Update bottom nav active state
-            if (screenId !== 'start-screen' && screenId !== 'auth-screen' && screenId !== 'play-learn-selection-screen') {
-                navItems.forEach(item => {
-                    item.classList.remove('active');
-                    if (item.getAttribute('data-screen') === screenId.replace('-screen', '')) {
-                        item.classList.add('active');
-                    }
-                });
-            }
-
-            // Load data when screens are shown
-            if (currentUser) {
-                if (screenId === 'dashboard-screen') {
-                    updateDashboard();
-                } else if (screenId === 'lessons-screen') {
-                    loadLessons();
-                } else if (screenId === 'quizzes-screen') {
-                    loadQuizzes();
-                } else if (screenId === 'wallet-screen') {
-                    updateWallet();
-                } else if (screenId === 'news-screen') {
-                    loadNews();
-                } else if (screenId === 'profile-screen') {
-                    updateProfile();
-                } else if (screenId === 'leaderboard-screen') {
-                    updateLeaderboard();
-                }
-            }
-        }
-
-        // Update dashboard with user data
-        function updateDashboard() {
-            document.getElementById('user-greeting').textContent = `Hi ${userData.name} 👋`;
-        }
-
-        // Update wallet with user data
-        function updateWallet() {
-            document.getElementById('user-balance').textContent = userData.fincoins || 0;
-            
-            const transactionHistory = document.getElementById('transaction-history');
-            transactionHistory.innerHTML = '';
-            
-            if (userData.transactions && userData.transactions.length > 0) {
-                userData.transactions.forEach(transaction => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${new Date(transaction.date).toLocaleDateString()}</td>
-                        <td>${new Date(transaction.date).toLocaleTimeString()}</td>
-                        <td>${transaction.task}</td>
-                        <td class="coin-earned">+${transaction.coins}</td>
-                    `;
-                    transactionHistory.appendChild(row);
-                });
-            } else {
-                transactionHistory.innerHTML = '<tr><td colspan="4" style="text-align: center;">No transactions yet</td></tr>';
-            }
-        }
-
-        // Update profile with user data
-        function updateProfile() {
-            document.getElementById('profile-avatar').textContent = userData.name.charAt(0);
-            document.getElementById('profile-name').textContent = userData.name;
-            document.getElementById('profile-role').textContent = userData.role === 'admin' ? 'Admin Member' : 'Member';
-            
-            document.getElementById('info-name').textContent = userData.name;
-            document.getElementById('info-email').textContent = userData.email;
-            document.getElementById('info-role').textContent = userData.role === 'admin' ? 'Administrator' : 'Standard User';
-            document.getElementById('info-join').textContent = new Date(userData.joinDate).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-            
-            const lessonsCompleted = userData.lessonsCompleted ? userData.lessonsCompleted.length : 0;
-            const quizzesCompleted = userData.quizzesCompleted ? userData.quizzesCompleted.length : 0;
-            
-            document.getElementById('info-lessons').textContent = lessonsCompleted;
-            document.getElementById('info-quizzes').textContent = quizzesCompleted;
-            document.getElementById('info-streak').textContent = `${userData.streak || 0} days`;
-            document.getElementById('info-coins').textContent = `${userData.fincoins || 0} 🪙`;
-            
-            // Update badges
-            const badgesContainer = document.getElementById('badges-container');
-            badgesContainer.innerHTML = '';
-            
-            if (userData.fincoins >= 100) {
-                badgesContainer.innerHTML += '<div class="badge">🥇</div>';
-            }
-            if (lessonsCompleted >= 5) {
-                badgesContainer.innerHTML += '<div class="badge">📚</div>';
-            }
-            if (quizzesCompleted >= 10) {
-                badgesContainer.innerHTML += '<div class="badge">🧠</div>';
-            }
-            if (userData.role === 'admin') {
-                badgesContainer.innerHTML += '<div class="badge">⭐</div>';
-            }
-        }
-
-        // Update leaderboard
-        async function updateLeaderboard() {
-            const leaderboardContainer = document.getElementById('leaderboard-container');
-            leaderboardContainer.innerHTML = '<div style="text-align: center; padding: 20px;">Loading leaderboard...</div>';
-            
-            try {
-                // Get all users sorted by fincoins
-                const usersSnapshot = await db.collection('users')
-                    .orderBy('fincoins', 'desc')
-                    .limit(10)
-                    .get();
-                
-                leaderboardContainer.innerHTML = '';
-                
-                if (usersSnapshot.empty) {
-                    leaderboardContainer.innerHTML = '<div style="text-align: center; padding: 20px;">No users found</div>';
-                    return;
-                }
-                
-                let rank = 1;
-                usersSnapshot.forEach(doc => {
-                    const user = doc.data();
-                    const rankClass = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : '';
-                    
-                    const card = document.createElement('div');
-                    card.className = 'leaderboard-card';
-                    card.innerHTML = `
-                        <div class="rank ${rankClass}">${rank}</div>
-                        <div class="user-info">
-                            <div class="user-name">${user.name}</div>
-                        </div>
-                        <div class="user-coins">${user.fincoins || 0} 🪙</div>
-                    `;
-                    leaderboardContainer.appendChild(card);
-                    rank++;
-                });
-            } catch (error) {
-                console.error('Error loading leaderboard:', error);
-                leaderboardContainer.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--error);">Error loading leaderboard</div>';
-            }
-        }
-
-        // Load lessons from Firestore
-        async function loadLessons() {
-            try {
-                console.log("Loading lessons...");
-                const lessonsSnapshot = await db.collection('lessons').orderBy('order', 'asc').get();
-                lessonsContainer.innerHTML = '';
-
-                if (lessonsSnapshot.empty) {
-                    lessonsContainer.innerHTML = '<div class="lesson-card"><p>No lessons available at the moment.</p></div>';
-                    console.log("No lessons found in database");
-                    return;
-                }
-
-                console.log(`Found ${lessonsSnapshot.size} lessons`);
-                
-                lessonsSnapshot.forEach(doc => {
-                    const lesson = doc.data();
-                    console.log('Processing lesson:', lesson.title);
-                    const isCompleted = userData.lessonsCompleted && userData.lessonsCompleted.includes(lesson.id);
-                    
-                    const lessonElement = document.createElement('div');
-                    lessonElement.className = 'lesson-card';
-                    lessonElement.innerHTML = `
-                        <div class="lesson-header">
-                            <div class="lesson-title">${lesson.title}</div>
-                            <div class="lesson-meta">
-                                <span>${lesson.duration}</span>
-                                <span>${lesson.category}</span>
-                            </div>
-                        </div>
-                        <div class="lesson-content">
-                            ${lesson.content}
-                        </div>
-                        <div class="lesson-footer">
-                            <div class="lesson-coins">+${lesson.coins} FinCoins</div>
-                            <button class="btn ${isCompleted ? 'btn-secondary' : 'btn-success'} mark-complete" 
-                                    data-lesson="${lesson.id}" data-coins="${lesson.coins}"
-                                    ${isCompleted ? 'disabled' : ''}>
-                                ${isCompleted ? 'Completed ✓' : 'Mark as Completed'}
-                            </button>
-                        </div>
-                    `;
-                    lessonsContainer.appendChild(lessonElement);
-                });
-
-                // Re-attach event listeners
-                document.querySelectorAll('.mark-complete').forEach(btn => {
-                    btn.addEventListener('click', handleLessonComplete);
-                });
-                
-            } catch (error) {
-                console.error('Error loading lessons:', error);
-                lessonsContainer.innerHTML = '<div class="lesson-card"><p>Error loading lessons. Please try again.</p></div>';
-            }
-        }
-
-        // Load quizzes from Firestore
-        async function loadQuizzes() {
-            try {
-                console.log("Loading quizzes...");
-                const quizzesSnapshot = await db.collection('quizzes').orderBy('order', 'asc').get();
-                quizzesContainer.innerHTML = '';
-
-                if (quizzesSnapshot.empty) {
-                    quizzesContainer.innerHTML = '<div class="quiz-container"><p>No quizzes available at the moment.</p></div>';
-                    console.log("No quizzes found in database");
-                    return;
-                }
-
-                console.log(`Found ${quizzesSnapshot.size} quizzes`);
-                
-                quizzesSnapshot.forEach(doc => {
-                    const quiz = doc.data();
-                    console.log('Processing quiz:', quiz.question);
-                    const isCompleted = userData.quizzesCompleted && userData.quizzesCompleted.includes(quiz.id);
-                    
-                    const quizElement = document.createElement('div');
-                    quizElement.className = 'quiz-container';
-                    quizElement.id = `quiz-${quiz.id}`;
-                    quizElement.innerHTML = `
-                        <div class="quiz-question">${quiz.question}</div>
-                        <div class="quiz-options">
-                            ${quiz.options.map((option, index) => `
-                                <div class="quiz-option" data-index="${index}">${option}</div>
-                            `).join('')}
-                        </div>
-                        <button class="btn submit-quiz" data-quiz="${quiz.id}" data-coins="${quiz.coins}"
-                                ${isCompleted ? 'disabled' : ''}>
-                            ${isCompleted ? 'Completed ✓' : 'Submit Answer'}
-                        </button>
-                        <div class="quiz-result"></div>
-                    `;
-                    quizzesContainer.appendChild(quizElement);
-                });
-
-                // Re-attach event listeners
-                document.querySelectorAll('.quiz-option').forEach(option => {
-                    option.addEventListener('click', handleQuizOptionSelect);
-                });
-
-                document.querySelectorAll('.submit-quiz').forEach(btn => {
-                    btn.addEventListener('click', handleQuizSubmit);
-                });
-                
-            } catch (error) {
-                console.error('Error loading quizzes:', error);
-                quizzesContainer.innerHTML = '<div class="quiz-container"><p>Error loading quizzes. Please try again.</p></div>';
-            }
-        }
-
-        // Load news from Firestore
-        async function loadNews() {
-            try {
-                const newsSnapshot = await db.collection('news').orderBy('date', 'desc').get();
-                newsContainer.innerHTML = '';
-
-                if (newsSnapshot.empty) {
-                    newsContainer.innerHTML = '<div class="news-card"><p>No news available at the moment.</p></div>';
-                    return;
-                }
-
-                newsSnapshot.forEach(doc => {
-                    const newsItem = doc.data();
-                    const newsElement = document.createElement('div');
-                    newsElement.className = 'news-card';
-                    newsElement.innerHTML = `
-                        <div class="news-title">${newsItem.title}</div>
-                        <div class="news-meta">
-                            <span>${new Date(newsItem.date).toLocaleDateString()}</span>
-                            <span>Source: ${newsItem.source}</span>
-                        </div>
-                        <div class="news-description">
-                            ${newsItem.description}
-                        </div>
-                        <button class="btn read-more-btn" style="padding: 8px 16px; font-size: 0.9rem;">Read More</button>
-                    `;
-                    newsContainer.appendChild(newsElement);
-                });
-            } catch (error) {
-                console.error('Error loading news:', error);
-                newsContainer.innerHTML = '<div class="news-card"><p>Error loading news. Please try again.</p></div>';
-            }
-        }
-
-        // Add coins to user
-        async function addCoins(amount, task) {
-            try {
-                // Update local data
-                userData.fincoins = (userData.fincoins || 0) + amount;
-                
-                // Add transaction
-                if (!userData.transactions) {
-                    userData.transactions = [];
-                }
-                
-                const transaction = {
-                    date: new Date().toISOString(),
-                    task: task,
-                    coins: amount
-                };
-                
-                userData.transactions.unshift(transaction);
-                
-                // Update Firestore
-                await db.collection('users').doc(currentUser.uid).update({
-                    fincoins: userData.fincoins,
-                    transactions: userData.transactions
-                });
-                
-                // Update UI if on relevant screens
-                if (document.getElementById('wallet-screen').classList.contains('active')) {
-                    updateWallet();
-                }
-                
-                if (document.getElementById('profile-screen').classList.contains('active')) {
-                    updateProfile();
-                }
-                
-                return true;
-            } catch (error) {
-                console.error('Error adding coins:', error);
-                return false;
-            }
-        }
-
-        // Mark lesson as completed
-        async function completeLesson(lessonId, coins) {
-            try {
-                if (!userData.lessonsCompleted) {
-                    userData.lessonsCompleted = [];
-                }
-                
-                // Check if already completed
-                if (userData.lessonsCompleted.includes(lessonId)) {
-                    return false;
-                }
-                
-                // Add to completed lessons
-                userData.lessonsCompleted.push(lessonId);
-                
-                // Update Firestore
-                await db.collection('users').doc(currentUser.uid).update({
-                    lessonsCompleted: userData.lessonsCompleted
-                });
-                
-                // Add coins
-                await addCoins(coins, `Completed ${lessonId} Lesson`);
-                
-                // Update profile
-                updateProfile();
-                
-                return true;
-            } catch (error) {
-                console.error('Error completing lesson:', error);
-                return false;
-            }
-        }
-
-        // Complete quiz
-        async function completeQuiz(quizId, coins) {
-            try {
-                if (!userData.quizzesCompleted) {
-                    userData.quizzesCompleted = [];
-                }
-                
-                // Check if already completed
-                if (userData.quizzesCompleted.includes(quizId)) {
-                    return false;
-                }
-                
-                // Add to completed quizzes
-                userData.quizzesCompleted.push(quizId);
-                
-                // Update Firestore
-                await db.collection('users').doc(currentUser.uid).update({
-                    quizzesCompleted: userData.quizzesCompleted
-                });
-                
-                // Add coins
-                await addCoins(coins, `Completed Quiz ${quizId}`);
-                
-                // Update profile
-                updateProfile();
-                
-                return true;
-            } catch (error) {
-                console.error('Error completing quiz:', error);
-                return false;
-            }
-        }
-
-        // Event handlers
-        function handleLessonComplete() {
-            const lessonId = this.getAttribute('data-lesson');
-            const coins = parseInt(this.getAttribute('data-coins'));
-            completeLesson(lessonId, coins);
-        }
-
-        function handleQuizOptionSelect() {
-            const parentQuiz = this.closest('.quiz-container');
-            parentQuiz.querySelectorAll('.quiz-option').forEach(opt => {
-                opt.classList.remove('selected');
-            });
-            this.classList.add('selected');
-        }
-
-        async function handleQuizSubmit() {
-            const quizId = this.getAttribute('data-quiz');
-            const coins = parseInt(this.getAttribute('data-coins'));
-            const quizContainer = document.getElementById(`quiz-${quizId}`);
-            const selectedOption = quizContainer.querySelector('.quiz-option.selected');
-            const resultDiv = quizContainer.querySelector('.quiz-result');
-            
-            if (!selectedOption) {
-                alert('Please select an answer!');
-                return;
-            }
-            
-            try {
-                // Get the quiz data to check correct answer
-                const quizDoc = await db.collection('quizzes').doc(quizId).get();
-                const quiz = quizDoc.data();
-                
-                const isCorrect = parseInt(selectedOption.getAttribute('data-index')) === quiz.correctAnswer;
-                
-                if (isCorrect) {
-                    resultDiv.textContent = 'Correct! Well done.';
-                    resultDiv.className = 'quiz-result correct';
-                    
-                    const success = await completeQuiz(quizId, coins);
-                    
-                    if (success) {
-                        this.disabled = true;
-                        this.textContent = 'Completed ✓';
-                    }
-                } else {
-                    resultDiv.textContent = 'Incorrect. Try again!';
-                    resultDiv.className = 'quiz-result incorrect';
-                }
-                
-                resultDiv.style.display = 'block';
-            } catch (error) {
-                console.error('Error submitting quiz:', error);
-                resultDiv.textContent = 'Error submitting quiz. Please try again.';
-                resultDiv.className = 'quiz-result incorrect';
-                resultDiv.style.display = 'block';
-            }
-        }
-
-        // Event Listeners
-        getStartedBtn.addEventListener('click', () => {
-            showScreen('auth-screen');
+        
+        userData.transactions.unshift(transaction);
+        
+        // Update Firestore
+        await db.collection('users').doc(currentUser.uid).update({
+            fincoins: userData.fincoins,
+            transactions: userData.transactions
         });
+        
+        // Update UI if on relevant screens
+        if (document.getElementById('wallet-screen').classList.contains('active')) {
+            updateWallet();
+        }
+        
+        if (document.getElementById('profile-screen').classList.contains('active')) {
+            updateProfile();
+        }
+        
+        return true;
+    } catch (error) {
+        console.error('Error adding coins:', error);
+        return false;
+    }
+}
 
-        // Login with Firebase
-        loginBtn.addEventListener('click', async () => {
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-            
-            if (!email || !password) {
-                loginError.textContent = 'Please enter both email and password.';
-                loginError.style.display = 'block';
-                return;
-            }
-            
-            try {
-                const userCredential = await auth.signInWithEmailAndPassword(email, password);
-                currentUser = userCredential.user;
-                
-                // Get user data from Firestore
-                const userDoc = await db.collection('users').doc(currentUser.uid).get();
-                
-                if (userDoc.exists) {
-                    userData = userDoc.data();
-                    showScreen('dashboard-screen');
-                    loginError.style.display = 'none';
-                } else {
-                    loginError.textContent = 'User data not found. Please contact support.';
-                    loginError.style.display = 'block';
-                }
-            } catch (error) {
-                console.error('Login error:', error);
-                if (error.code === 'auth/user-not-found') {
-                    loginError.textContent = 'No account found with this email.';
-                } else if (error.code === 'auth/wrong-password') {
-                    loginError.textContent = 'Incorrect password. Please try again.';
-                } else {
-                    loginError.textContent = 'Login failed. Please try again.';
-                }
-                loginError.style.display = 'block';
-            }
+// Mark lesson as completed
+async function completeLesson(lessonId, coins) {
+    try {
+        if (!userData.lessonsCompleted) {
+            userData.lessonsCompleted = [];
+        }
+        
+        // Check if already completed
+        if (userData.lessonsCompleted.includes(lessonId)) {
+            return false;
+        }
+        
+        // Add to completed lessons
+        userData.lessonsCompleted.push(lessonId);
+        
+        // Update Firestore
+        await db.collection('users').doc(currentUser.uid).update({
+            lessonsCompleted: userData.lessonsCompleted
         });
+        
+        // Add coins
+        await addCoins(coins, `Completed ${lessonId} Lesson`);
+        
+        // Update profile
+        updateProfile();
+        
+        return true;
+    } catch (error) {
+        console.error('Error completing lesson:', error);
+        return false;
+    }
+}
 
-        // Sign up with Firebase
-        signupBtn.addEventListener('click', async () => {
-            const name = document.getElementById('signup-name').value;
-            const email = document.getElementById('signup-email').value;
-            const password = document.getElementById('signup-password').value;
-            const confirm = document.getElementById('signup-confirm').value;
+// Complete quiz
+async function completeQuiz(quizId, coins) {
+    try {
+        if (!userData.quizzesCompleted) {
+            userData.quizzesCompleted = [];
+        }
+        
+        // Check if already completed
+        if (userData.quizzesCompleted.includes(quizId)) {
+            return false;
+        }
+        
+        // Add to completed quizzes
+        userData.quizzesCompleted.push(quizId);
+        
+        // Update Firestore
+        await db.collection('users').doc(currentUser.uid).update({
+            quizzesCompleted: userData.quizzesCompleted
+        });
+        
+        // Add coins
+        await addCoins(coins, `Completed Quiz ${quizId}`);
+        
+        // Update profile
+        updateProfile();
+        
+        return true;
+    } catch (error) {
+        console.error('Error completing quiz:', error);
+        return false;
+    }
+}
+
+// Event handlers
+function handleLessonComplete() {
+    const lessonId = this.getAttribute('data-lesson');
+    const coins = parseInt(this.getAttribute('data-coins'));
+    completeLesson(lessonId, coins);
+}
+
+function handleQuizOptionSelect() {
+    const parentQuiz = this.closest('.quiz-container');
+    parentQuiz.querySelectorAll('.quiz-option').forEach(opt => {
+        opt.classList.remove('selected');
+    });
+    this.classList.add('selected');
+}
+
+async function handleQuizSubmit() {
+    const quizId = this.getAttribute('data-quiz');
+    const coins = parseInt(this.getAttribute('data-coins'));
+    const quizContainer = document.getElementById(`quiz-${quizId}`);
+    const selectedOption = quizContainer.querySelector('.quiz-option.selected');
+    const resultDiv = quizContainer.querySelector('.quiz-result');
+    
+    if (!selectedOption) {
+        alert('Please select an answer!');
+        return;
+    }
+    
+    try {
+        // Get the quiz data to check correct answer
+        const quizDoc = await db.collection('quizzes').doc(quizId).get();
+        const quiz = quizDoc.data();
+        
+        const isCorrect = parseInt(selectedOption.getAttribute('data-index')) === quiz.correctAnswer;
+        
+        if (isCorrect) {
+            resultDiv.textContent = 'Correct! Well done.';
+            resultDiv.className = 'quiz-result correct';
             
-            // Validation
-            if (!name || !email || !password || !confirm) {
-                signupError.textContent = 'All fields are required.';
-                signupError.style.display = 'block';
-                signupSuccess.style.display = 'none';
-                return;
+            const success = await completeQuiz(quizId, coins);
+            
+            if (success) {
+                this.disabled = true;
+                this.textContent = 'Completed ✓';
             }
+        } else {
+            resultDiv.textContent = 'Incorrect. Try again!';
+            resultDiv.className = 'quiz-result incorrect';
+        }
+        
+        resultDiv.style.display = 'block';
+    } catch (error) {
+        console.error('Error submitting quiz:', error);
+        resultDiv.textContent = 'Error submitting quiz. Please try again.';
+        resultDiv.className = 'quiz-result incorrect';
+        resultDiv.style.display = 'block';
+    }
+}
+
+// Event Listeners
+getStartedBtn.addEventListener('click', () => {
+    showScreen('auth-screen');
+});
+
+// Login with Firebase
+loginBtn.addEventListener('click', async () => {
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-password').value;
+    
+    if (!email || !password) {
+        loginError.textContent = 'Please enter both email and password.';
+        loginError.style.display = 'block';
+        return;
+    }
+    
+    try {
+        const userCredential = await auth.signInWithEmailAndPassword(email, password);
+        currentUser = userCredential.user;
+        
+        // Get user data from Firestore
+        const userDoc = await db.collection('users').doc(currentUser.uid).get();
+        
+        if (userDoc.exists) {
+            userData = userDoc.data();
+            showScreen('dashboard-screen');
+            loginError.style.display = 'none';
+        } else {
+            loginError.textContent = 'User data not found. Please contact support.';
+            loginError.style.display = 'block';
+        }
+    } catch (error) {
+        console.error('Login error:', error);
+        if (error.code === 'auth/user-not-found') {
+            loginError.textContent = 'No account found with this email.';
+        } else if (error.code === 'auth/wrong-password') {
+            loginError.textContent = 'Incorrect password. Please try again.';
+        } else {
+            loginError.textContent = 'Login failed. Please try again.';
+        }
+        loginError.style.display = 'block';
+    }
+});
+
+// Sign up with Firebase
+signupBtn.addEventListener('click', async () => {
+    const name = document.getElementById('signup-name').value;
+    const email = document.getElementById('signup-email').value;
+    const password = document.getElementById('signup-password').value;
+    const confirm = document.getElementById('signup-confirm').value;
+    
+    // Validation
+    if (!name || !email || !password || !confirm) {
+        signupError.textContent = 'All fields are required.';
+        signupError.style.display = 'block';
+        signupSuccess.style.display = 'none';
+        return;
+    }
+    
+    if (password !== confirm) {
+        signupError.textContent = 'Passwords do not match.';
+        signupError.style.display = 'block';
+        signupSuccess.style.display = 'none';
+        return;
+    }
+    
+    if (password.length < 6) {
+        signupError.textContent = 'Password should be at least 6 characters.';
+        signupError.style.display = 'block';
+        signupSuccess.style.display = 'none';
+        return;
+    }
+    
+    try {
+        const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+        currentUser = userCredential.user;
+        
+        // Create user document in Firestore
+        await db.collection('users').doc(currentUser.uid).set({
+            name: name,
+            email: email,
+            role: 'user',
+            fincoins: 0,
+            lessonsCompleted: [],
+            quizzesCompleted: [],
+            transactions: [],
+            state: "",
+            age: "",
+            joinDate: new Date().toISOString(),
+            streak: 0
+        });
+        
+        // Get the created user data
+        const userDoc = await db.collection('users').doc(currentUser.uid).get();
+        userData = userDoc.data();
+        
+        signupError.style.display = 'none';
+        signupSuccess.textContent = 'Account created successfully!';
+        signupSuccess.style.display = 'block';
+        
+        // Switch to dashboard after a delay
+        setTimeout(() => {
+            showScreen('dashboard-screen');
+        }, 1500);
+        
+    } catch (error) {
+        console.error('Signup error:', error);
+        if (error.code === 'auth/email-already-in-use') {
+            signupError.textContent = 'An account with this email already exists.';
+        } else if (error.code === 'auth/weak-password') {
+            signupError.textContent = 'Password is too weak.';
+        } else {
+            signupError.textContent = 'Error creating account. Please try again.';
+        }
+        signupError.style.display = 'block';
+        signupSuccess.style.display = 'none';
+    }
+});
+
+// Forgot password
+forgotPasswordLink.addEventListener('click', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('login-email').value;
+    
+    if (!email) {
+        alert('Please enter your email address to reset password.');
+        return;
+    }
+    
+    try {
+        await auth.sendPasswordResetEmail(email);
+        alert('Password reset email sent! Check your inbox.');
+    } catch (error) {
+        console.error('Password reset error:', error);
+        alert('Error sending reset email. Please check your email address.');
+    }
+});
+
+// Tab card clicks
+tabCards.forEach(card => {
+    card.addEventListener('click', () => {
+        const section = card.getAttribute('data-section');
+        if (section === 'play-learn') {
+            // Show the intermediate selection screen
+            showScreen('play-learn-selection-screen');
+        } else {
+            showScreen(`${section}-screen`);
+        }
+    });
+});
+
+// Selection card clicks
+selectionCards.forEach(card => {
+    card.addEventListener('click', () => {
+        const section = card.getAttribute('data-section');
+        if (section === 'learn') {
+            showScreen('lessons-screen');
+        } else if (section === 'play') {
+            showScreen('quizzes-screen');
+        }
+    });
+});
+
+// Back button clicks
+backBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        // If on lessons or quizzes screen, go back to selection screen
+        if (document.getElementById('lessons-screen').classList.contains('active') || 
+            document.getElementById('quizzes-screen').classList.contains('active')) {
+            showScreen('play-learn-selection-screen');
+        } else {
+            // Otherwise go back to dashboard
+            showScreen('dashboard-screen');
+        }
+    });
+});
+
+// Bottom nav clicks
+navItems.forEach(item => {
+    item.addEventListener('click', () => {
+        const screen = item.getAttribute('data-screen');
+        if (screen === 'play-learn') {
+            // Show the intermediate selection screen
+            showScreen('play-learn-selection-screen');
+        } else {
+            showScreen(`${screen}-screen`);
+        }
+    });
+});
+
+// Logout
+logoutBtn.addEventListener('click', async () => {
+    try {
+        await auth.signOut();
+        currentUser = null;
+        userData = null;
+        showScreen('start-screen');
+        
+        // Clear form fields
+        document.getElementById('login-email').value = '';
+        document.getElementById('login-password').value = '';
+        document.getElementById('signup-name').value = '';
+        document.getElementById('signup-email').value = '';
+        document.getElementById('signup-password').value = '';
+        document.getElementById('signup-confirm').value = '';
+    } catch (error) {
+        console.error('Logout error:', error);
+    }
+});
+
+dashboardLogoutBtn.addEventListener('click', async () => {
+    try {
+        await auth.signOut();
+        currentUser = null;
+        userData = null;
+        showScreen('start-screen');
+    } catch (error) {
+        console.error('Logout error:', error);
+    }
+});
+
+// Auth state observer
+auth.onAuthStateChanged(async (user) => {
+    if (user) {
+        // User is signed in
+        currentUser = user;
+        
+        try {
+            // Get user data from Firestore
+            const userDoc = await db.collection('users').doc(user.uid).get();
             
-            if (password !== confirm) {
-                signupError.textContent = 'Passwords do not match.';
-                signupError.style.display = 'block';
-                signupSuccess.style.display = 'none';
-                return;
-            }
-            
-            if (password.length < 6) {
-                signupError.textContent = 'Password should be at least 6 characters.';
-                signupError.style.display = 'block';
-                signupSuccess.style.display = 'none';
-                return;
-            }
-            
-            try {
-                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-                currentUser = userCredential.user;
-                
-                // Create user document in Firestore
-                await db.collection('users').doc(currentUser.uid).set({
-                    name: name,
-                    email: email,
-                    role: 'user',
-                    fincoins: 0,
-                    lessonsCompleted: [],
-                    quizzesCompleted: [],
-                    transactions: [],
-                    state: "",
-                    age: "",
-                    joinDate: new Date().toISOString(),
-                    streak: 0
-                });
-                
-                // Get the created user data
-                const userDoc = await db.collection('users').doc(currentUser.uid).get();
+            if (userDoc.exists) {
                 userData = userDoc.data();
                 
-                signupError.style.display = 'none';
-                signupSuccess.textContent = 'Account created successfully!';
-                signupSuccess.style.display = 'block';
-                
-                // Switch to dashboard after a delay
-                setTimeout(() => {
+                // If on auth screen, redirect to dashboard
+                if (authScreen.classList.contains('active')) {
                     showScreen('dashboard-screen');
-                }, 1500);
-                
-            } catch (error) {
-                console.error('Signup error:', error);
-                if (error.code === 'auth/email-already-in-use') {
-                    signupError.textContent = 'An account with this email already exists.';
-                } else if (error.code === 'auth/weak-password') {
-                    signupError.textContent = 'Password is too weak.';
-                } else {
-                    signupError.textContent = 'Error creating account. Please try again.';
-                }
-                signupError.style.display = 'block';
-                signupSuccess.style.display = 'none';
-            }
-        });
-
-        // Forgot password
-        forgotPasswordLink.addEventListener('click', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('login-email').value;
-            
-            if (!email) {
-                alert('Please enter your email address to reset password.');
-                return;
-            }
-            
-            try {
-                await auth.sendPasswordResetEmail(email);
-                alert('Password reset email sent! Check your inbox.');
-            } catch (error) {
-                console.error('Password reset error:', error);
-                alert('Error sending reset email. Please check your email address.');
-            }
-        });
-
-        // Tab card clicks
-        tabCards.forEach(card => {
-            card.addEventListener('click', () => {
-                const section = card.getAttribute('data-section');
-                if (section === 'play-learn') {
-                    // Show the intermediate selection screen
-                    showScreen('play-learn-selection-screen');
-                } else {
-                    showScreen(`${section}-screen`);
-                }
-            });
-        });
-
-        // Selection card clicks
-        selectionCards.forEach(card => {
-            card.addEventListener('click', () => {
-                const section = card.getAttribute('data-section');
-                if (section === 'learn') {
-                    showScreen('lessons-screen');
-                } else if (section === 'play') {
-                    showScreen('quizzes-screen');
-                }
-            });
-        });
-
-        // Back button clicks
-        backBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                // If on lessons or quizzes screen, go back to selection screen
-                if (document.getElementById('lessons-screen').classList.contains('active') || 
-                    document.getElementById('quizzes-screen').classList.contains('active')) {
-                    showScreen('play-learn-selection-screen');
-                } else {
-                    // Otherwise go back to dashboard
-                    showScreen('dashboard-screen');
-                }
-            });
-        });
-
-        // Bottom nav clicks
-        navItems.forEach(item => {
-            item.addEventListener('click', () => {
-                const screen = item.getAttribute('data-screen');
-                if (screen === 'play-learn') {
-                    // Show the intermediate selection screen
-                    showScreen('play-learn-selection-screen');
-                } else {
-                    showScreen(`${screen}-screen`);
-                }
-            });
-        });
-
-        // Logout
-        logoutBtn.addEventListener('click', async () => {
-            try {
-                await auth.signOut();
-                currentUser = null;
-                userData = null;
-                showScreen('start-screen');
-                
-                // Clear form fields
-                document.getElementById('login-email').value = '';
-                document.getElementById('login-password').value = '';
-                document.getElementById('signup-name').value = '';
-                document.getElementById('signup-email').value = '';
-                document.getElementById('signup-password').value = '';
-                document.getElementById('signup-confirm').value = '';
-            } catch (error) {
-                console.error('Logout error:', error);
-            }
-        });
-
-        dashboardLogoutBtn.addEventListener('click', async () => {
-            try {
-                await auth.signOut();
-                currentUser = null;
-                userData = null;
-                showScreen('start-screen');
-            } catch (error) {
-                console.error('Logout error:', error);
-            }
-        });
-
-        // Auth state observer
-        auth.onAuthStateChanged(async (user) => {
-            if (user) {
-                // User is signed in
-                currentUser = user;
-                
-                try {
-                    // Get user data from Firestore
-                    const userDoc = await db.collection('users').doc(user.uid).get();
-                    
-                    if (userDoc.exists) {
-                        userData = userDoc.data();
-                        
-                        // If on auth screen, redirect to dashboard
-                        if (authScreen.classList.contains('active')) {
-                            showScreen('dashboard-screen');
-                        }
-                    } else {
-                        console.error('User document not found');
-                        await auth.signOut();
-                    }
-                } catch (error) {
-                    console.error('Error getting user data:', error);
                 }
             } else {
-                // User is signed out
-                currentUser = null;
-                userData = null;
-                
-                // If not on start or auth screen, redirect to start
-                if (!startScreen.classList.contains('active') && !authScreen.classList.contains('active')) {
-                    showScreen('start-screen');
-                }
+                console.error('User document not found');
+                await auth.signOut();
+            }
+        } catch (error) {
+            console.error('Error getting user data:', error);
+        }
+    } else {
+        // User is signed out
+        currentUser = null;
+        userData = null;
+        
+        // If not on start or auth screen, redirect to start
+        if (!startScreen.classList.contains('active') && !authScreen.classList.contains('active')) {
+            showScreen('start-screen');
+        }
+    }
+});
+
+// Auth tabs
+authTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+        const tabName = tab.getAttribute('data-tab');
+        
+        authTabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        
+        authForms.forEach(form => {
+            form.classList.remove('active');
+            if (form.id === `${tabName}-form`) {
+                form.classList.add('active');
             }
         });
+        
+        // Clear messages
+        loginError.style.display = 'none';
+        signupError.style.display = 'none';
+        signupSuccess.style.display = 'none';
+    });
+});
 
-        // Auth tabs
-        authTabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                const tabName = tab.getAttribute('data-tab');
-                
-                authTabs.forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                
-                authForms.forEach(form => {
-                    form.classList.remove('active');
-                    if (form.id === `${tabName}-form`) {
-                        form.classList.add('active');
-                    }
-                });
-                
-                // Clear messages
-                loginError.style.display = 'none';
-                signupError.style.display = 'none';
-                signupSuccess.style.display = 'none';
-            });
-        });
+// Initialize the app
+initTheme();
 
-        // Initialize the app
-        initTheme();
+// Theme toggle event
+themeToggle.addEventListener('click', toggleTheme);
 
-        // Theme toggle event
-        themeToggle.addEventListener('click', toggleTheme);
+// Add animation delays to tab cards
+tabCards.forEach((card, index) => {
+    card.style.animationDelay = `${index * 0.1}s`;
+});
 
-        // Add animation delays to tab cards
-        tabCards.forEach((card, index) => {
-            card.style.animationDelay = `${index * 0.1}s`;
-        });
-
-        console.log('WiselyFin app initialized successfully!');
+console.log('WiselyFin app initialized successfully!');
     </script>
 </body>
 </html>
